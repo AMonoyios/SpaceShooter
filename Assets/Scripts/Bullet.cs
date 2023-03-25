@@ -4,7 +4,7 @@ using UnityEngine;
 
 public sealed class Bullet : MonoBehaviour
 {
-    Vector2 screenBounds;
+    private Vector2 screenBounds;
 
     private void  Awake()
     {
@@ -12,12 +12,25 @@ public sealed class Bullet : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if(transform.position.x < -screenBounds.x / 2.0f || transform.position.x > screenBounds.x / 2.0f ||
             transform.position.y < -screenBounds.y / 2.0f || transform.position.y > screenBounds.y / 2.0f)
         {
-            Destroy(gameObject);
+            DestroyBullet();
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.transform.CompareTag("Enemy"))
+        {
+            DestroyBullet();
+        }
+    }
+
+    private void DestroyBullet()
+    {
+        Destroy(gameObject);
     }
 }
