@@ -2,13 +2,13 @@ using UnityEngine;
 
 public sealed class MovingMesh : MonoBehaviour
 {
-    private SpaceShipController spaceship;
+    private PlayerController spaceship;
     private float moveFactor;
     private Material material;
 
     private float offset;
 
-    public void Init(SpaceShipController spaceship, float moveFactor, bool scaleToDeviceHeight, Material material)
+    public void Init(PlayerController spaceship, float moveFactor, bool scaleToDeviceHeight, Material material)
     {
         this.spaceship = spaceship;
         this.moveFactor = moveFactor;

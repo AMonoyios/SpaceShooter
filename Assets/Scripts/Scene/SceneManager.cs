@@ -5,7 +5,7 @@ using UnityEngine;
 public sealed class SceneManager : MonoBehaviour
 {
     [SerializeField]
-    private SpaceShipController spaceship;
+    private PlayerController spaceship;
 
     [SerializeField]
     private SceneLayerData[] sceneLayers;
@@ -17,15 +17,20 @@ public sealed class SceneManager : MonoBehaviour
         float newChildPos = delta;
         for (int i = 0; i < sceneLayers.Length; i++)
         {
+            if (!sceneLayers[i].enabled)
+            {
+                continue;
+            }
+
             GameObject enviromentLayer = GameObject.CreatePrimitive(PrimitiveType.Quad);
             enviromentLayer.transform.parent = transform;
 
             enviromentLayer.AddComponent<MovingMesh>().Init(spaceship, sceneLayers[i].moveFactor, sceneLayers[i].scaleToDeviceHeight, sceneLayers[i].material);
         }
 
-        for (int i = 0; i < sceneLayers.Length; i++)
+        for (int i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(i).position = i == sceneLayers.Length - 1 ?
+            transform.GetChild(i).position = i == transform.childCount - 1 ?
                 new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, newChildPos - 0.1f) :
                 new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, newChildPos);
 

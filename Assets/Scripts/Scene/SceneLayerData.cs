@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public sealed class SceneLayerData
 {
+    public bool enabled = true;
     [Range(0.0f, 1.0f)]
     public float moveFactor = 0.5f;
     public bool scaleToDeviceHeight = false;

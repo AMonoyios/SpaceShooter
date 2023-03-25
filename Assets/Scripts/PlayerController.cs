@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public sealed class SpaceShipController : MonoBehaviour
+public sealed class PlayerController : MonoSingleton<PlayerController>
 {
     private Vector3 touchPosition;
     private Rigidbody2D rb;
@@ -11,7 +11,7 @@ public sealed class SpaceShipController : MonoBehaviour
 
     [SerializeField, Min(50.0f)]
     private float speed = 100.0f;
-    public float Speed { get { return speed; }}
+    public float Speed => speed;
 
     [SerializeField, Min(0.1f)]
     private float shootingInterval = 1.5f;
@@ -19,11 +19,19 @@ public sealed class SpaceShipController : MonoBehaviour
     [SerializeField]
     private GameObject bulletPrefab;
     [SerializeField, Min(0.0f)]
-    private float shootForce = 20.0f;
+    private float shootForce = 5.0f;
+    [SerializeField, Min(0.0f)]
+    private float damage = 25.0f;
+    public float Damage => damage;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        Vector2 screenSize = Helper.ScreenSizeInWorldCoords();
+        float bottomY = Camera.main.transform.position.y - (screenSize.y / 2.0f);
+        float spawnPos = Mathf.Lerp(bottomY, screenSize.y / 2.0f, 0.1f);
+        transform.position = new Vector3(Camera.main.transform.position.x, spawnPos, 0.0f);
     }
 
     private void Update()
