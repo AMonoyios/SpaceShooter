@@ -1,40 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
-public sealed class SceneManager : MonoBehaviour
+public sealed class SceneManager : MonoSingleton<SceneManager>
 {
     [SerializeField]
-    private PlayerController spaceship;
+    private Slider loadingBar;
 
-    [SerializeField]
-    private SceneLayerData[] sceneLayers;
-
-    // Start is called before the first frame update
-    void Start()
+    public async void LoadScene(string sceneName)
     {
-        float delta = (Camera.main.ViewportToWorldPoint(new Vector3(0.0f, 0.0f, Camera.main.farClipPlane)).z - spaceship.transform.position.z) / sceneLayers.Length;
-        float newChildPos = delta;
-        for (int i = 0; i < sceneLayers.Length; i++)
+        AsyncOperation scene = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
+        scene.allowSceneActivation = false;
+
+        loadingBar.gameObject.SetActive(true);
+
+        do
         {
-            if (!sceneLayers[i].enabled)
-            {
-                continue;
-            }
-
-            GameObject enviromentLayer = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            enviromentLayer.transform.parent = transform;
-
-            enviromentLayer.AddComponent<MovingMesh>().Init(spaceship, sceneLayers[i].moveFactor, sceneLayers[i].scaleToDeviceHeight, sceneLayers[i].material);
+            await Task.Delay(100);
+            loadingBar.value = scene.progress;
         }
+        while (scene.progress < 0.9f);
 
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            transform.GetChild(i).position = i == transform.childCount - 1 ?
-                new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, newChildPos - 0.1f) :
-                new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, newChildPos);
+        await Task.Delay(1000);
 
-            newChildPos += delta;
-        }
+        scene.allowSceneActivation = true;
+        loadingBar.gameObject.SetActive(false);
     }
 }

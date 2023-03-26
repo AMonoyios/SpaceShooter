@@ -5,11 +5,18 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private RouteCreator routeCreator;
-    [SerializeField, Min(1.0f)]
-    private float routeDuration = 5.0f;
-    private float elapsedTime = 0.0f;
 
+    private Vector2[] checkpointSegmentPositions;
+    private Vector2[] p = new Vector2[] {Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero};
+    [SerializeField]
+    private bool isMoving = false;
+    private float elapsedTime = 0.0f;
+    [SerializeField, Min(1.0f)]
+    private float speed = 10.0f;
+
+    [SerializeField]
     private int checkpointIndex = 0;
+    [SerializeField]
     private int segmentIndex = 0;
 
     [SerializeField, Min(0.0f)]
@@ -22,18 +29,20 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void Spawn()
+    {
+        gameObject.SetActive(true);
+
+        checkpointSegmentPositions = GetCheckpointSegmentPositions(checkpointIndex);
+    }
+
     private void Update()
     {
-        elapsedTime += Time.deltaTime;
-        float percentageCompleted = elapsedTime / routeDuration;
-
-        Vector2[] segmentPos = routeCreator.route.GetPointsInSegment(checkpointIndex);
-
-        transform.position = Vector3.Lerp(transform.position, segmentPos[segmentIndex], percentageCompleted);
-
-        if (Vector2.Distance(transform.position, segmentPos[segmentIndex]) <= 0.05f)
+        if (Vector2.Distance(transform.position, checkpointSegmentPositions[checkpointSegmentPositions.Length - 1]) <= routeCreator.collisionDistance)
         {
-            if (segmentIndex + 1 < segmentPos.Length)
+            checkpointSegmentPositions = GetCheckpointSegmentPositions(checkpointIndex);
+
+            if (segmentIndex + 1 < checkpointSegmentPositions.Length)
             {
                 segmentIndex++;
             }
@@ -50,14 +59,65 @@ public class Enemy : MonoBehaviour
 
                 segmentIndex = 0;
             }
+        }
 
-            elapsedTime = 0.0f;
+        if (!isMoving)
+        {
+            switch (segmentIndex)
+            {
+                case 0:
+                {
+                    p[0] = checkpointSegmentPositions[segmentIndex];
+                    break;
+                }
+                case 1:
+                {
+                    p[1] = checkpointSegmentPositions[segmentIndex];
+                    break;
+                }
+                case 2:
+                {
+                    p[2] = checkpointSegmentPositions[segmentIndex];
+                    break;
+                }
+                case 3:
+                {
+                    p[3] = checkpointSegmentPositions[segmentIndex];
+
+                    Debug.Log($"p0: {p[0]} \b p1: {p[1]} \b p2: {p[2]} \b p3: {p[3]}");
+                    StartCoroutine(Move(p));
+
+                    break;
+                }
+            }
         }
     }
 
-    public void Spawn()
+    private IEnumerator Move(Vector2[] points)
     {
-        gameObject.SetActive(true);
+        isMoving = true;
+        Debug.Log("Moving...");
+
+        while (elapsedTime < 1.0f)
+        {
+            elapsedTime += Time.deltaTime * speed;
+
+            transform.position = (Mathf.Pow(1.0f - elapsedTime, 3.0f) * points[0]) +
+                                 (3.0f * Mathf.Pow(1.0f - elapsedTime, 2.0f) * elapsedTime * points[1]) +
+                                 (3.0f * (1.0f - elapsedTime) * Mathf.Pow(elapsedTime, 2.0f) * points[2]) +
+                                 (Mathf.Pow(elapsedTime, 3.0f) * points[3]);
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        elapsedTime = 0.0f;
+        isMoving = false;
+    }
+
+    private Vector2[] GetCheckpointSegmentPositions(int checkpointIndex)
+    {
+        Debug.Log($"Fetching checkpoint {checkpointIndex} segment positions...");
+        return routeCreator.route.GetPointsInSegment(checkpointIndex);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

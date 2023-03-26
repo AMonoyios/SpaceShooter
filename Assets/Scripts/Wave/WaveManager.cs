@@ -31,6 +31,9 @@ public sealed class WaveManager : MonoBehaviour
     {
         currentWaveActive = 0;
         waveStatus = WaveStatus.Preparing;
+
+        spawnButton.interactable = false;
+        spawnButton.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -43,10 +46,10 @@ public sealed class WaveManager : MonoBehaviour
             }
             case WaveStatus.Preparing:
             {
-                if (waves[currentWaveActive].spawnTimer > 0.0f)
+                if (waves[currentWaveActive].spawnTimer >= 0.0f)
                 {
                     waves[currentWaveActive].spawnTimer -= Time.deltaTime;
-                    if (waves[currentWaveActive].spawnTimer <= 0.0f)
+                    if (waves[currentWaveActive].spawnTimer < 0.0f)
                     {
                         Debug.Log($"Spawning wave {currentWaveActive}");
                         waves[currentWaveActive].SpawnEnemies();

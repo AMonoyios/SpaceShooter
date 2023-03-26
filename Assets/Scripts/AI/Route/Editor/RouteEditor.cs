@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(RouteCreator))]
-public class RouteEditor : Editor
+public sealed class RouteEditor : Editor
 {
     private RouteCreator creator;
     private Route Route => creator.route;
