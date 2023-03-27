@@ -2,6 +2,10 @@
 
 ## Change logs
 
+### 0.0.5
+- Expanded wave manager functionality
+- Optimizations and bug fixes
+
 ### 0.0.3
 - Wave manager
 - Bezier route tool
