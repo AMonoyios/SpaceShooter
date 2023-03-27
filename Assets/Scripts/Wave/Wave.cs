@@ -18,26 +18,27 @@ public sealed class Wave
         }
     }
 
+    public void DespawnEnemies(bool ignoreNextWave = false)
+    {
+        foreach (Enemy enemy in enemies)
+        {
+            enemy.Despawn(ignoreNextWave);
+        }
+    }
+
     public bool IsWaveCompleted
     {
         get
         {
-            if (spawnTimer < 0)
+            foreach (Enemy enemy in enemies)
             {
-                foreach (Enemy enemy in enemies)
+                if (enemy.IsAlive)
                 {
-                    if (enemy.IsAlive)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
+            }
 
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return true;
         }
     }
 }

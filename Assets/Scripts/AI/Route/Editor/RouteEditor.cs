@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System;
 
 [CustomEditor(typeof(RouteCreator))]
 public sealed class RouteEditor : Editor
@@ -69,6 +70,11 @@ public sealed class RouteEditor : Editor
 
     private void OnSceneGUI()
     {
+        if (Application.isPlaying)
+        {
+            return;
+        }
+
         Input();
         Draw();
     }
@@ -110,8 +116,8 @@ public sealed class RouteEditor : Editor
 
             for (int i = 0; i < Route.NumSegments; i++)
             {
-                Vector2[] points = Route.GetPointsInSegment(i);
-                float dst = HandleUtility.DistancePointBezier(mousePosition, points[0], points[3], points[1], points[2]);
+                Tuple<Vector2, Vector2, Vector2, Vector2> points = Route.GetPointsInSegment(i);
+                float dst = HandleUtility.DistancePointBezier(mousePosition, points.Item1, points.Item2, points.Item3, points.Item4);
                 if (dst < minDstToSegment)
                 {
                     minDstToSegment = dst;
@@ -154,15 +160,15 @@ public sealed class RouteEditor : Editor
     {
         for (int i = 0; i < Route.NumSegments; i++)
         {
-            Vector2[] points = Route.GetPointsInSegment(i);
+            Tuple<Vector2, Vector2, Vector2, Vector2> points = Route.GetPointsInSegment(i);
             if (!Route.AutoSetControlPoints)
             {
                 Handles.color = Color.black;
-                Handles.DrawLine(points[1], points[0]);
-                Handles.DrawLine(points[2], points[3]);
+                Handles.DrawLine(points.Item2, points.Item1);
+                Handles.DrawLine(points.Item3, points.Item4);
             }
             Color segmentCol = (i == selectedSegmentIndex && Event.current.shift) ? creator.routeGizmoColors.selectedSegmentCol : creator.routeGizmoColors.segmentCol;
-            Handles.DrawBezier(points[0], points[3], points[1], points[2], segmentCol, null, 2);
+            Handles.DrawBezier(points.Item1, points.Item4, points.Item2, points.Item3, segmentCol, null, 2);
         }
 
         for (int i = 0; i < Route.NumPoints; i++)

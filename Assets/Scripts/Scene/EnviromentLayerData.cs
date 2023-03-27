@@ -6,8 +6,8 @@ using UnityEngine;
 public sealed class EnviromentLayerData
 {
     public bool enabled = true;
-    [Range(0.0f, 1.0f)]
-    public float moveFactor = 1.0f;
+    [Range(0.0f, 200.0f)]
+    public float moveFactor = 100.0f;
     public bool scaleToDeviceHeight = false;
     public Material material;
 }

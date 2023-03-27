@@ -4,7 +4,11 @@ using UnityEngine;
 
 public sealed class Bullet : MonoBehaviour
 {
+    [SerializeField]
+    private ParticleSystem contactEffect;
+
     private Vector2 screenBounds;
+    private const float padding = 1.0f;
 
     private void  Awake()
     {
@@ -14,10 +18,10 @@ public sealed class Bullet : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if(transform.position.x < -screenBounds.x / 2.0f || transform.position.x > screenBounds.x / 2.0f ||
-            transform.position.y < -screenBounds.y / 2.0f || transform.position.y > screenBounds.y / 2.0f)
+        if(transform.position.x < (-screenBounds.x - padding) / 2.0f || transform.position.x > (screenBounds.x + padding) / 2.0f ||
+            transform.position.y < (-screenBounds.y - padding) / 2.0f || transform.position.y > (screenBounds.y + padding) / 2.0f)
         {
-            DestroyBullet();
+            StartCoroutine(DestroyBullet(false));
         }
     }
 
@@ -25,12 +29,19 @@ public sealed class Bullet : MonoBehaviour
     {
         if (other.transform.CompareTag("Enemy"))
         {
-            DestroyBullet();
+            StartCoroutine(DestroyBullet(true));
         }
     }
 
-    private void DestroyBullet()
+    private IEnumerator DestroyBullet(bool triggerEffects)
     {
+        if (triggerEffects)
+        {
+            contactEffect.gameObject.SetActive(true);
+
+            yield return new WaitForSeconds(contactEffect.main.duration);
+        }
+
         Destroy(gameObject);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -129,9 +130,9 @@ public class Route
         }
     }
 
-    public Vector2[] GetPointsInSegment(int i)
+    public Tuple<Vector2, Vector2, Vector2, Vector2> GetPointsInSegment(int i)
     {
-        return new Vector2[] { checkpoints[i * 3], checkpoints[(i * 3) + 1], checkpoints[(i * 3) + 2], checkpoints[LoopIndex((i * 3) + 3)] };
+        return new Tuple<Vector2, Vector2, Vector2, Vector2>(checkpoints[i * 3], checkpoints[(i * 3) + 1], checkpoints[(i * 3) + 2], checkpoints[LoopIndex((i * 3) + 3)]);
     }
 
     public void MovePoint(int i, Vector2 pos)

@@ -1,135 +1,106 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+[RequireComponent(typeof(RouteCreator))]
+public sealed class Enemy : MonoBehaviour
 {
     private RouteCreator routeCreator;
+    private readonly List<Tuple<Vector2, Vector2, Vector2, Vector2>> points = new List<Tuple<Vector2, Vector2, Vector2, Vector2>>();
 
-    private Vector2[] checkpointSegmentPositions;
-    private Vector2[] p = new Vector2[] {Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero};
-    [SerializeField]
-    private bool isMoving = false;
-    private float elapsedTime = 0.0f;
-    [SerializeField, Min(1.0f)]
-    private float speed = 10.0f;
-
-    [SerializeField]
     private int checkpointIndex = 0;
-    [SerializeField]
-    private int segmentIndex = 0;
+    private bool moving = false;
+    private float elapsedTime = 0.0f;
 
     [SerializeField, Min(0.0f)]
     private float health = 100.0f;
     public bool IsAlive => health > 0.0f;
+    [SerializeField, Min(1.0f)]
+    private float speed = 50.0f;
 
     private void Start()
     {
         routeCreator = GetComponent<RouteCreator>();
-        gameObject.SetActive(false);
+
+        Despawn();
     }
 
     public void Spawn()
     {
         gameObject.SetActive(true);
 
-        checkpointSegmentPositions = GetCheckpointSegmentPositions(checkpointIndex);
+        EventsManager.Instance.OnEnemyDamagedEvent += TakeDamage;
+
+        for (int i = 0; i < routeCreator.route.NumSegments; i++)
+        {
+            points.Add(routeCreator.route.GetPointsInSegment(i));
+        }
+
+        transform.position = points[0].Item1;
+    }
+
+    public void Despawn(bool ignoreNextWave = false)
+    {
+        if (!ignoreNextWave)
+        {
+            WaveManager.Instance.TryProceedToNextWave();
+        }
+
+        gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        if (Vector2.Distance(transform.position, checkpointSegmentPositions[checkpointSegmentPositions.Length - 1]) <= routeCreator.collisionDistance)
+        if (moving)
         {
-            checkpointSegmentPositions = GetCheckpointSegmentPositions(checkpointIndex);
-
-            if (segmentIndex + 1 < checkpointSegmentPositions.Length)
-            {
-                segmentIndex++;
-            }
-            else
-            {
-                if (checkpointIndex + 1 < routeCreator.route.NumSegments)
-                {
-                    checkpointIndex++;
-                }
-                else
-                {
-                    checkpointIndex = 0;
-                }
-
-                segmentIndex = 0;
-            }
+            return;
         }
 
-        if (!isMoving)
+        if (Vector2.Distance(transform.position, points[checkpointIndex].Item1) <= routeCreator.collisionDistance)
         {
-            switch (segmentIndex)
-            {
-                case 0:
-                {
-                    p[0] = checkpointSegmentPositions[segmentIndex];
-                    break;
-                }
-                case 1:
-                {
-                    p[1] = checkpointSegmentPositions[segmentIndex];
-                    break;
-                }
-                case 2:
-                {
-                    p[2] = checkpointSegmentPositions[segmentIndex];
-                    break;
-                }
-                case 3:
-                {
-                    p[3] = checkpointSegmentPositions[segmentIndex];
-
-                    Debug.Log($"p0: {p[0]} \b p1: {p[1]} \b p2: {p[2]} \b p3: {p[3]}");
-                    StartCoroutine(Move(p));
-
-                    break;
-                }
-            }
+            StartCoroutine(Move(points[checkpointIndex]));
         }
     }
 
-    private IEnumerator Move(Vector2[] points)
+    private IEnumerator Move(Tuple<Vector2, Vector2, Vector2, Vector2> points)
     {
-        isMoving = true;
-        Debug.Log("Moving...");
+        moving = true;
 
         while (elapsedTime < 1.0f)
         {
-            elapsedTime += Time.deltaTime * speed;
+            transform.position = (Mathf.Pow(1.0f - elapsedTime, 3.0f) * points.Item1) +
+                                 (3.0f * Mathf.Pow(1.0f - elapsedTime, 2.0f) * elapsedTime * points.Item2) +
+                                 (3.0f * (1.0f - elapsedTime) * Mathf.Pow(elapsedTime, 2.0f) * points.Item3) +
+                                 (Mathf.Pow(elapsedTime, 3.0f) * points.Item4);
 
-            transform.position = (Mathf.Pow(1.0f - elapsedTime, 3.0f) * points[0]) +
-                                 (3.0f * Mathf.Pow(1.0f - elapsedTime, 2.0f) * elapsedTime * points[1]) +
-                                 (3.0f * (1.0f - elapsedTime) * Mathf.Pow(elapsedTime, 2.0f) * points[2]) +
-                                 (Mathf.Pow(elapsedTime, 3.0f) * points[3]);
+            elapsedTime += Time.deltaTime * speed / 100.0f;
 
             yield return new WaitForEndOfFrame();
         }
+        transform.position = points.Item4;
 
+        checkpointIndex = checkpointIndex + 1 < routeCreator.route.NumSegments ? ++checkpointIndex : 0;
         elapsedTime = 0.0f;
-        isMoving = false;
+
+        moving = false;
     }
 
-    private Vector2[] GetCheckpointSegmentPositions(int checkpointIndex)
+    public void TakeDamage(float amount)
     {
-        Debug.Log($"Fetching checkpoint {checkpointIndex} segment positions...");
-        return routeCreator.route.GetPointsInSegment(checkpointIndex);
+        health -= amount;
+
+        if (!IsAlive)
+        {
+            Despawn();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.transform.CompareTag("PlayerBullet"))
         {
-            health -= PlayerController.Instance.Damage;
-
-            if (!IsAlive)
-            {
-                gameObject.SetActive(false);
-            }
+            TakeDamage(PlayerController.Instance.Damage);
         }
     }
 }
