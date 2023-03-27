@@ -1,86 +1,87 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
-public sealed class WaveManager : MonoBehaviour
+public sealed class WaveManager : MonoSingleton<WaveManager>
 {
-    private enum WaveStatus
-    {
-        Idle,
-        Preparing,
-        Active
-    }
-    private WaveStatus waveStatus = WaveStatus.Idle;
+    private int currentWaveIndex = -1;
+    private const float exitLevelTimer = 3.0f;
 
     [SerializeField]
-    private int currentWaveActive = -1;
+    private TextMeshProUGUI guiText;
 
     [SerializeField]
     private Wave[] waves;
 
-    [SerializeField]
-    private Button spawnButton;
-
-    private void Start()
+    private void Awake()
     {
-        spawnButton.onClick.AddListener(StartWave);
+        currentWaveIndex = 0;
+
+        StartCoroutine(CountdownTimer(3.0f, () => SpawnWave(currentWaveIndex)));
     }
 
-    private void StartWave()
+    public void SpawnWave(int waveIndex)
     {
-        currentWaveActive = 0;
-        waveStatus = WaveStatus.Preparing;
-
-        spawnButton.interactable = false;
-        spawnButton.gameObject.SetActive(false);
+        waves[waveIndex].SpawnEnemies();
     }
 
-    private void Update()
+    public void TryProceedToNextWave()
     {
-        switch (waveStatus)
+        Debug.Log("Try Proceed to next");
+        if (waves[currentWaveIndex].IsWaveCompleted)
         {
-            case WaveStatus.Idle:
-            {
-                break;
-            }
-            case WaveStatus.Preparing:
-            {
-                if (waves[currentWaveActive].spawnTimer >= 0.0f)
-                {
-                    waves[currentWaveActive].spawnTimer -= Time.deltaTime;
-                    if (waves[currentWaveActive].spawnTimer < 0.0f)
-                    {
-                        Debug.Log($"Spawning wave {currentWaveActive}");
-                        waves[currentWaveActive].SpawnEnemies();
-
-                        waveStatus = WaveStatus.Active;
-                    }
-                }
-
-                break;
-            }
-            case WaveStatus.Active:
-            {
-                if (waves[currentWaveActive].IsWaveCompleted)
-                {
-                    if (waves.Length > currentWaveActive + 1)
-                    {
-                        Debug.Log($"Entering wave {currentWaveActive}...");
-                        currentWaveActive++;
-
-                        waveStatus = WaveStatus.Preparing;
-                    }
-                    else
-                    {
-                        Debug.Log("All waves completed!");
-
-                        waveStatus = WaveStatus.Idle;
-                    }
-                }
-
-                break;
-            }
+            ProceedToNextWave();
         }
+    }
+
+    public void ProceedToNextWave()
+    {
+        Debug.Log("Proceed to next");
+        if (waves.Length > currentWaveIndex + 1)
+        {
+            currentWaveIndex++;
+            Debug.Log($"Entering wave {currentWaveIndex}...");
+
+            StartCoroutine(CountdownTimer(waves[currentWaveIndex].spawnTimer, () => SpawnWave(currentWaveIndex)));
+        }
+        else
+        {
+            Debug.Log("Level cleared!");
+
+            CompleteWave(currentWaveIndex, "Level cleared!");
+
+            StartCoroutine(GoToMenu());
+        }
+    }
+
+    public void CompleteWave(int waveIndex, string waveCompletedText = "Wave Completed!")
+    {
+        waves[waveIndex].DespawnEnemies(true);
+
+        guiText.gameObject.SetActive(true);
+        guiText.text = waveCompletedText;
+    }
+
+    public IEnumerator GoToMenu()
+    {
+        yield return new WaitForSeconds(exitLevelTimer);
+
+        SceneManager.Instance.LoadScene("Menu");
+    }
+
+    private IEnumerator CountdownTimer(float duration, System.Action onComplete = null)
+    {
+        guiText.gameObject.SetActive(true);
+
+        while (duration > 0.0f)
+        {
+            guiText.text = Mathf.FloorToInt(duration).ToString();
+            yield return new WaitForSeconds(1.0f);
+            duration--;
+        }
+
+        guiText.gameObject.SetActive(false);
+        onComplete?.Invoke();
     }
 }

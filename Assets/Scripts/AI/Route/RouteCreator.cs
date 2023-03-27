@@ -24,13 +24,4 @@ public sealed class RouteCreator : MonoBehaviour
     {
         route = new Route(transform.position);
     }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = routeGizmoColors.anchorCol;
-        for (int i = 0; i < route.NumSegments; i++)
-        {
-            Gizmos.DrawWireSphere(route.GetPointsInSegment(i)[0], collisionDistance);
-        }
-    }
 }
