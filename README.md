@@ -6,9 +6,6 @@
 - Expanded wave manager functionality
 - Optimizations and bug fixes
 
-### 0.0.4
-- Optimizations and bug fixes
-
 ### 0.0.3
 - Wave manager
 - Bezier route tool
