@@ -2,6 +2,18 @@
 
 ## Change logs
 
+### 0.0.9
+- Expanded level initialization
+- Optimizations and bug fixes
+
+### 0.0.8
+- Scene and level refactoring
+
+### 0.0.7
+- Added stats
+- Implemented attack functionality for enemies
+- Basic save system (PlayerPrefs)
+
 ### 0.0.5
 - Expanded wave manager functionality
 - Optimizations and bug fixes
