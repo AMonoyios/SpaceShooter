@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public sealed class PlayerController : MonoSingleton<PlayerController>
@@ -9,19 +10,14 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
     private Rigidbody2D rb;
     private Vector3 direction;
 
-    [SerializeField, Min(50.0f)]
-    private float speed = 100.0f;
-
-    [SerializeField, Min(0.0f)]
-    private float damage = 25.0f;
-    public float Damage => damage;
     [SerializeField]
     private GameObject bulletPrefab;
-    [SerializeField, Min(0.1f)]
-    private float reloadTime = 1.5f;
+    private const float bulletForce = 5.0f;
+
+    [SerializeField]
+    private TextMeshProUGUI playerHealthText;
+
     private float timer = 0.0f;
-    [SerializeField, Min(0.0f)]
-    private float shootForce = 5.0f;
 
     private void Start()
     {
@@ -31,6 +27,8 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
         float bottomY = Camera.main.transform.position.y - (screenSize.y / 2.0f);
         float spawnPos = Mathf.Lerp(bottomY, screenSize.y / 2.0f, 0.1f);
         transform.position = new Vector3(Camera.main.transform.position.x, spawnPos, 0.0f);
+
+        UpdatePlayerHealthDisplay();
     }
 
     private void Update()
@@ -44,7 +42,7 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
 
             direction = touchPosition - transform.position;
 
-            rb.velocity = speed * Time.deltaTime * direction;
+            rb.velocity = DataManager.Instance.playerData.speed * Time.deltaTime * direction;
 
             if (touch.phase == TouchPhase.Ended)
             {
@@ -52,7 +50,7 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
             }
 
             timer += Time.deltaTime;
-            if (timer >= reloadTime)
+            if (timer >= DataManager.Instance.playerData.reloadTime)
             {
                 Shoot();
                 timer = 0.0f;
@@ -63,6 +61,26 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
     private void Shoot()
     {
         GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-        bullet.GetComponent<Rigidbody2D>().AddForce(transform.up * shootForce, ForceMode2D.Impulse);
+        bullet.GetComponent<Bullet>().ignoreThis = gameObject;
+        bullet.GetComponent<Rigidbody2D>().AddForce(transform.up * bulletForce, ForceMode2D.Impulse);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        DataManager.Instance.playerData.health -= amount;
+
+        if (DataManager.Instance.playerData.health <= 0.0f)
+        {
+            WaveManager.Instance.CompleteWave(WaveManager.Instance.CurrentWaveIndex, "Level Failed");
+
+            StartCoroutine(WaveManager.Instance.GoToMenu());
+        }
+
+        UpdatePlayerHealthDisplay();
+    }
+
+    private void UpdatePlayerHealthDisplay()
+    {
+        playerHealthText.text = "Health: " + DataManager.Instance.playerData.health.ToString();
     }
 }

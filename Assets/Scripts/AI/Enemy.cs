@@ -13,11 +13,16 @@ public sealed class Enemy : MonoBehaviour
     private bool moving = false;
     private float elapsedTime = 0.0f;
 
-    [SerializeField, Min(0.0f)]
-    private float health = 100.0f;
-    public bool IsAlive => health > 0.0f;
-    [SerializeField, Min(1.0f)]
-    private float speed = 50.0f;
+    [SerializeField]
+    private DataScriptableObject enemyData;
+    public int Damage => enemyData.damage;
+    public bool IsAlive => enemyData.health > 0.0f;
+
+    [SerializeField]
+    private GameObject bulletPrefab;
+
+    private float timer = 0.0f;
+    private const float bulletForce = 2.5f;
 
     private void Start()
     {
@@ -30,8 +35,6 @@ public sealed class Enemy : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        EventsManager.Instance.OnEnemyDamagedEvent += TakeDamage;
-
         for (int i = 0; i < routeCreator.route.NumSegments; i++)
         {
             points.Add(routeCreator.route.GetPointsInSegment(i));
@@ -42,6 +45,8 @@ public sealed class Enemy : MonoBehaviour
 
     public void Despawn(bool ignoreNextWave = false)
     {
+        Debug.Log("Despawning enemy");
+
         if (!ignoreNextWave)
         {
             WaveManager.Instance.TryProceedToNextWave();
@@ -52,6 +57,13 @@ public sealed class Enemy : MonoBehaviour
 
     private void Update()
     {
+        timer += Time.deltaTime;
+        if (timer >= enemyData.reloadTime)
+        {
+            Shoot();
+            timer = 0.0f;
+        }
+
         if (moving)
         {
             return;
@@ -74,7 +86,7 @@ public sealed class Enemy : MonoBehaviour
                                  (3.0f * (1.0f - elapsedTime) * Mathf.Pow(elapsedTime, 2.0f) * points.Item3) +
                                  (Mathf.Pow(elapsedTime, 3.0f) * points.Item4);
 
-            elapsedTime += Time.deltaTime * speed / 100.0f;
+            elapsedTime += Time.deltaTime * enemyData.speed / 100.0f;
 
             yield return new WaitForEndOfFrame();
         }
@@ -86,21 +98,22 @@ public sealed class Enemy : MonoBehaviour
         moving = false;
     }
 
-    public void TakeDamage(float amount)
+    private void Shoot()
     {
-        health -= amount;
+        GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
+        bullet.GetComponent<Bullet>().ignoreThis = gameObject;
+        bullet.GetComponent<Rigidbody2D>().AddForce(enemyData.reloadTime * bulletForce * transform.up, ForceMode2D.Impulse);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        enemyData.health -= amount;
 
         if (!IsAlive)
         {
-            Despawn();
-        }
-    }
+            DataManager.Instance.playerData.scrap += enemyData.scrap;
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.transform.CompareTag("PlayerBullet"))
-        {
-            TakeDamage(PlayerController.Instance.Damage);
+            Despawn();
         }
     }
 }

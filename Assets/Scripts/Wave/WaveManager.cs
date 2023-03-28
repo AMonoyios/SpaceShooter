@@ -6,6 +6,7 @@ using TMPro;
 public sealed class WaveManager : MonoSingleton<WaveManager>
 {
     private int currentWaveIndex = -1;
+    public int CurrentWaveIndex => currentWaveIndex;
     private const float exitLevelTimer = 3.0f;
 
     [SerializeField]
@@ -53,6 +54,8 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
 
             StartCoroutine(GoToMenu());
         }
+
+        DataManager.Instance.SaveData();
     }
 
     public void CompleteWave(int waveIndex, string waveCompletedText = "Wave Completed!")
