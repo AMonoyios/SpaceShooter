@@ -24,15 +24,10 @@ public sealed class Enemy : MonoBehaviour
     private float timer = 0.0f;
     private const float bulletForce = 2.5f;
 
-    private void Start()
+    private void Awake()
     {
         routeCreator = GetComponent<RouteCreator>();
 
-        Despawn();
-    }
-
-    public void Spawn()
-    {
         gameObject.SetActive(true);
 
         for (int i = 0; i < routeCreator.route.NumSegments; i++)
@@ -52,7 +47,7 @@ public sealed class Enemy : MonoBehaviour
             WaveManager.Instance.TryProceedToNextWave();
         }
 
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 
     private void Update()

@@ -6,21 +6,31 @@ using UnityEngine;
 public sealed class Wave
 {
     [SerializeField]
-    private Enemy[] enemies;
+    private GameObject[] enemies;
+    private readonly List<Enemy> enemiesList = new List<Enemy>();
     [Min(0.0f)]
     public float spawnTimer;
 
+    public void Init()
+    {
+        enemiesList.Clear();
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            enemiesList.Add(enemies[i].GetComponent<Enemy>());
+        }
+    }
+
     public void SpawnEnemies()
     {
-        foreach (Enemy enemy in enemies)
+        foreach (GameObject enemy in enemies)
         {
-            enemy.Spawn();
+            Object.Instantiate(enemy, Vector3.zero, Quaternion.Euler(0.0f, 0.0f, 180.0f));
         }
     }
 
     public void DespawnEnemies(bool ignoreNextWave = false)
     {
-        foreach (Enemy enemy in enemies)
+        foreach (Enemy enemy in enemiesList)
         {
             enemy.Despawn(ignoreNextWave);
         }
@@ -30,7 +40,7 @@ public sealed class Wave
     {
         get
         {
-            foreach (Enemy enemy in enemies)
+            foreach (Enemy enemy in enemiesList)
             {
                 if (enemy.IsAlive)
                 {
