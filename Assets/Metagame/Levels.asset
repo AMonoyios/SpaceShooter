@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96db6e344dd7b2348a192aa19ceae5ad, type: 3}
+  m_Name: Levels
+  m_EditorClassIdentifier: 
+  levels:
+  - waves:
+    - enemies:
+      - {fileID: 1284232563612203200, guid: a3dc10710e88ad24cb4b7d055032e84c, type: 3}
+      spawnTimer: 0
+    - enemies:
+      - {fileID: 1239728491422173633, guid: 3e5e5cc7bb68d9d4190deb99f7e10d56, type: 3}
+      spawnTimer: 3
+    - enemies:
+      - {fileID: 1945448245530176565, guid: 3425927f5f5817c41b641d41d04b3f5d, type: 3}
+      spawnTimer: 5
+  - waves:
+    - enemies:
+      - {fileID: 1284232563612203200, guid: 1504c38310bdfe64f98be5f78da46c03, type: 3}
+      - {fileID: 1284232563612203200, guid: 1504c38310bdfe64f98be5f78da46c03, type: 3}
+      spawnTimer: 0
+    - enemies:
+      - {fileID: 1239728491422173633, guid: 1ce316de6e5b4aa49b09150ba2a2f801, type: 3}
+      spawnTimer: 3
+    - enemies:
+      - {fileID: 1945448245530176565, guid: c5ca786e7d9316e4286d075f4baa09ff, type: 3}
+      spawnTimer: 5

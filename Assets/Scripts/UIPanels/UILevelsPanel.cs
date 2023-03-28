@@ -2,52 +2,65 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public sealed class UILevelsPanel : UIBasePanel
 {
-    [SerializeField]
-    private UIPanelsManager uiPanelsManager;
-
     [Header("Buttons")]
     [SerializeField]
     private Button backBtn;
+
+    [Header("Levels")]
+    [SerializeField]
+    private Transform contentTransform;
+    [SerializeField]
+    private GameObject levelButtonPrefab;
+    [SerializeField]
+    private LevelsScriptableObject levels;
+
+    private void Start()
+    {
+        for (int i = 0; i < contentTransform.childCount; i++)
+        {
+            Debug.Log("Deleting levels child");
+            Destroy(contentTransform.GetChild(i));
+        }
+
+        for (int levelIndex = 0; levelIndex < levels.levels.Count; levelIndex++)
+        {
+            LevelIndex level = Instantiate(levelButtonPrefab, contentTransform).GetComponent<LevelIndex>();
+            level.Init(levelIndex);
+        }
+    }
 
     private void Awake()
     {
         backBtn.onClick.AddListener(ShowMenuPanel);
     }
 
-    public override void HidePanel()
-    {
-        HidePanelBehaviour();
-
-        gameObject.SetActive(false);
-    }
-
-    public override void HidePanelBehaviour()
-    {
-        base.HidePanelBehaviour();
-
-        // This is where you can code custom hide behaviour for specific panel
-    }
-
     public override void ShowPanel()
     {
-        ShowPanelBehaviour();
+        if (gameObject.activeSelf)
+        {
+            return;
+        }
 
         gameObject.SetActive(true);
     }
 
-    public override void ShowPanelBehaviour()
+    public override void HidePanel()
     {
-        base.ShowPanelBehaviour();
+        if (!gameObject.activeSelf)
+        {
+            return;
+        }
 
-        // This is where you can code custom show behaviour for specific panel
+        gameObject.SetActive(false);
     }
 
     private void ShowMenuPanel()
     {
-        uiPanelsManager.CloseAllPanels();
-        uiPanelsManager.menuPanel.ShowPanel();
+        UIPanelsManager.Instance.HideAllPanels();
+        UIPanelsManager.Instance.menuPanel.ShowPanel();
     }
 }

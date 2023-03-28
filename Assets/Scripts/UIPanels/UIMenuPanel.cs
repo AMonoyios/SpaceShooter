@@ -5,18 +5,18 @@ using UnityEngine.UI;
 
 public sealed class UIMenuPanel : UIBasePanel
 {
-    [SerializeField]
-    private UIPanelsManager uiPanelsManager;
-
     [Header("Buttons")]
     [SerializeField]
     private Button levelsBtn;
+    [SerializeField]
+    private Button upgradesBtn;
     [SerializeField]
     private Button quitBtn;
 
     private void Awake()
     {
         levelsBtn.onClick.AddListener(ShowLevelsPanel);
+        upgradesBtn.onClick.AddListener(ShowUpgradesPanel);
         quitBtn.onClick.AddListener(QuitGame);
     }
 
@@ -27,16 +27,7 @@ public sealed class UIMenuPanel : UIBasePanel
             return;
         }
 
-        HidePanelBehaviour();
-
         gameObject.SetActive(false);
-    }
-
-    public override void HidePanelBehaviour()
-    {
-        base.HidePanelBehaviour();
-
-        // This is where you can code custom hide behaviour for specific panel
     }
 
     public override void ShowPanel()
@@ -46,26 +37,25 @@ public sealed class UIMenuPanel : UIBasePanel
             return;
         }
 
-        ShowPanelBehaviour();
-
         gameObject.SetActive(true);
-    }
-
-    public override void ShowPanelBehaviour()
-    {
-        base.ShowPanelBehaviour();
-
-        // This is where you can code custom show behaviour for specific panel
     }
 
     private void ShowLevelsPanel()
     {
-        uiPanelsManager.CloseAllPanels();
-        uiPanelsManager.levelsPanel.ShowPanel();
+        UIPanelsManager.Instance.HideAllPanels();
+        UIPanelsManager.Instance.levelsPanel.ShowPanel();
+    }
+
+    private void ShowUpgradesPanel()
+    {
+        UIPanelsManager.Instance.HideAllPanels();
+        UIPanelsManager.Instance.upgradesPanel.ShowPanel();
     }
 
     private void QuitGame()
     {
+        DataManager.Instance.SaveData();
+
         Debug.LogWarning("Closing game");
         Application.Quit();
     }

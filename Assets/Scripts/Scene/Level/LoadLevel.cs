@@ -9,13 +9,19 @@ public sealed class LoadLevel : MonoBehaviour
     [SerializeField]
     private Button button;
 
+    [SerializeField]
+    private LevelIndex levelIndex;
+
     private void Awake()
     {
-        button.onClick.AddListener(Load);
+        button.onClick.AddListener(() => Load(levelIndex.Index));
     }
 
-    private void Load()
+    private void Load(int levelIndex)
     {
+        DataManager.Instance.currentLevel = levelIndex;
+        DataManager.Instance.SaveData();
+
         SceneManager.Instance.LoadScene(levelSceneName);
     }
 }
