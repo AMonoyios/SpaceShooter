@@ -16,6 +16,7 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
 
     [SerializeField]
     private TextMeshProUGUI playerHealthText;
+    private int health;
 
     private float timer = 0.0f;
 
@@ -27,6 +28,8 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
         float bottomY = Camera.main.transform.position.y - (screenSize.y / 2.0f);
         float spawnPos = Mathf.Lerp(bottomY, screenSize.y / 2.0f, 0.1f);
         transform.position = new Vector3(Camera.main.transform.position.x, spawnPos, 0.0f);
+
+        health = DataManager.Instance.playerData.health;
 
         UpdatePlayerHealthDisplay();
     }
@@ -67,11 +70,11 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
 
     public void TakeDamage(int amount)
     {
-        DataManager.Instance.playerData.health -= amount;
+        health -= amount;
 
-        if (DataManager.Instance.playerData.health <= 0.0f)
+        if (health <= 0.0f)
         {
-            WaveManager.Instance.CompleteWave(WaveManager.Instance.CurrentWaveIndex, "Level Failed");
+            WaveManager.Instance.CompleteCurrentWave("Level Failed");
 
             StartCoroutine(WaveManager.Instance.GoToMenu());
         }
@@ -81,6 +84,6 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
 
     private void UpdatePlayerHealthDisplay()
     {
-        playerHealthText.text = "Health: " + DataManager.Instance.playerData.health.ToString();
+        playerHealthText.text = "Health: " + health.ToString();
     }
 }

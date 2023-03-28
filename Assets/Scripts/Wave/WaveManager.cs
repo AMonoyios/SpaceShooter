@@ -5,32 +5,35 @@ using TMPro;
 
 public sealed class WaveManager : MonoSingleton<WaveManager>
 {
-    private int currentWaveIndex = -1;
-    public int CurrentWaveIndex => currentWaveIndex;
+    // Remove wave from here and get from player prefs the current level and then load that wave
     private const float exitLevelTimer = 3.0f;
 
     [SerializeField]
     private TextMeshProUGUI guiText;
 
     [SerializeField]
-    private Wave[] waves;
+    private LevelsScriptableObject levelsData;
+    private int currentWaveIndex = 0;
+    private Wave currentWave;
 
     private void Awake()
     {
-        currentWaveIndex = 0;
-
+        DataManager.Instance.LoadData();
         StartCoroutine(CountdownTimer(3.0f, () => SpawnWave(currentWaveIndex)));
     }
 
     public void SpawnWave(int waveIndex)
     {
-        waves[waveIndex].SpawnEnemies();
+        currentWave = levelsData.levels[DataManager.Instance.currentLevel].waves[waveIndex];
+
+        currentWave.Init();
+        currentWave.SpawnEnemies();
     }
 
     public void TryProceedToNextWave()
     {
-        Debug.Log("Try Proceed to next");
-        if (waves[currentWaveIndex].IsWaveCompleted)
+        Debug.Log("Try Proceed to next wave");
+        if (currentWave.IsWaveCompleted)
         {
             ProceedToNextWave();
         }
@@ -39,18 +42,18 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
     public void ProceedToNextWave()
     {
         Debug.Log("Proceed to next");
-        if (waves.Length > currentWaveIndex + 1)
+        if (levelsData.levels[DataManager.Instance.currentLevel].waves.Count > currentWaveIndex + 1)
         {
             currentWaveIndex++;
             Debug.Log($"Entering wave {currentWaveIndex}...");
 
-            StartCoroutine(CountdownTimer(waves[currentWaveIndex].spawnTimer, () => SpawnWave(currentWaveIndex)));
+            StartCoroutine(CountdownTimer(currentWave.spawnTimer, () => SpawnWave(currentWaveIndex)));
         }
         else
         {
             Debug.Log("Level cleared!");
 
-            CompleteWave(currentWaveIndex, "Level cleared!");
+            CompleteCurrentWave("Level cleared!");
 
             StartCoroutine(GoToMenu());
         }
@@ -58,9 +61,9 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
         DataManager.Instance.SaveData();
     }
 
-    public void CompleteWave(int waveIndex, string waveCompletedText = "Wave Completed!")
+    public void CompleteCurrentWave(string waveCompletedText = "Wave Completed!")
     {
-        waves[waveIndex].DespawnEnemies(true);
+        currentWave.DespawnEnemies(true);
 
         guiText.gameObject.SetActive(true);
         guiText.text = waveCompletedText;

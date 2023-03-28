@@ -3,6 +3,7 @@ using UnityEngine;
 public class DataManager : MonoSingleton<DataManager>
 {
     public DataScriptableObject playerData;
+    public int currentLevel;
 
     public void SaveData()
     {
@@ -13,6 +14,8 @@ public class DataManager : MonoSingleton<DataManager>
         PlayerPrefs.SetFloat("speed", playerData.speed);
         PlayerPrefs.SetInt("damage", playerData.damage);
         PlayerPrefs.SetFloat("reloadTime", playerData.reloadTime);
+
+        PlayerPrefs.SetInt("currentLevel", currentLevel);
 
         PlayerPrefs.Save();
     }
@@ -26,5 +29,7 @@ public class DataManager : MonoSingleton<DataManager>
         playerData.speed = PlayerPrefs.HasKey("speed") ? PlayerPrefs.GetFloat("speed") : 100.0f;
         playerData.damage = PlayerPrefs.HasKey("damage") ? PlayerPrefs.GetInt("damage") : 1;
         playerData.reloadTime = PlayerPrefs.HasKey("reloadTime") ? PlayerPrefs.GetFloat("reloadTime") : 1.5f;
+
+        currentLevel = PlayerPrefs.HasKey("currentLevel") ? PlayerPrefs.GetInt("currentLevel") : 0;
     }
 }

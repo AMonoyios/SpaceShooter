@@ -15,8 +15,11 @@ public sealed class Enemy : MonoBehaviour
 
     [SerializeField]
     private DataScriptableObject enemyData;
+
+    private int health;
+
     public int Damage => enemyData.damage;
-    public bool IsAlive => enemyData.health > 0.0f;
+    public bool IsAlive => health > 0.0f;
 
     [SerializeField]
     private GameObject bulletPrefab;
@@ -36,6 +39,8 @@ public sealed class Enemy : MonoBehaviour
         }
 
         transform.position = points[0].Item1;
+
+        health = enemyData.health;
     }
 
     public void Despawn(bool ignoreNextWave = false)
@@ -102,7 +107,7 @@ public sealed class Enemy : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
-        enemyData.health -= amount;
+        health -= amount;
 
         if (!IsAlive)
         {

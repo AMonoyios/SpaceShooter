@@ -809,16 +809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guiText: {fileID: 1898946527}
-  waves:
-  - enemies:
-    - {fileID: 1284232563612203200, guid: a3dc10710e88ad24cb4b7d055032e84c, type: 3}
-    spawnTimer: 0
-  - enemies:
-    - {fileID: 1239728491422173633, guid: 3e5e5cc7bb68d9d4190deb99f7e10d56, type: 3}
-    spawnTimer: 3
-  - enemies:
-    - {fileID: 1945448245530176565, guid: 3425927f5f5817c41b641d41d04b3f5d, type: 3}
-    spawnTimer: 3
+  levelsData: {fileID: 11400000, guid: cfa1466b1717c804e8e7cf7bd6d6383b, type: 2}
 --- !u!114 &1714888097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -880,6 +871,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: e878280b122efa944a2f48e065adefb5, type: 2}
+  currentLevel: 0
 --- !u!1 &1898946526
 GameObject:
   m_ObjectHideFlags: 0
