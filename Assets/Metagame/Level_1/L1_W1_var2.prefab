@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3816644832039942082}
   - component: {fileID: 1284232563612203206}
   m_Layer: 0
-  m_Name: L1_W1_var1
+  m_Name: L1_W1_var2
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -134,12 +134,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   route:
     checkpoints:
-    - {x: -1.9744098, y: 0.98942447}
-    - {x: -1.3248899, y: 0.3870307}
-    - {x: 0.6349302, y: 2.3298628}
-    - {x: -0.012135029, y: 3.0096009}
-    - {x: -0.71354926, y: 3.7464323}
-    - {x: -2.7007136, y: 1.6630312}
+    - {x: 0.029854536, y: -0.0051370263}
+    - {x: 0.72671884, y: -0.6706777}
+    - {x: 2.5760682, y: 1.3037286}
+    - {x: 1.9921298, y: 1.9361062}
+    - {x: 1.3019841, y: 2.6835015}
+    - {x: -0.68651175, y: 0.67902905}
     isClosed: 1
     autoSetControlPoints: 0
   routeGizmoColors:
@@ -162,5 +162,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd59703ca1c7a8419614fae389ef6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 11400000, guid: 07373362bcaa6e34a9d97d65a6dbc150, type: 2}
+  enemyData: {fileID: 11400000, guid: 17df84de8b8a7fb4cac784f327177694, type: 2}
   bulletPrefab: {fileID: 5811866227059200450, guid: dbbd26e695b8b3f4eb42d34f5f0dfb1a, type: 3}

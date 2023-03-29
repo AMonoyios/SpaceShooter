@@ -24,12 +24,25 @@ public class DataManager : MonoSingleton<DataManager>
     {
         Debug.Log("Loading data...");
 
-        playerData.scrap = PlayerPrefs.HasKey("scrap") ? PlayerPrefs.GetInt("scrap") : 0;
-        playerData.health = PlayerPrefs.HasKey("health") ? PlayerPrefs.GetInt("health") : 5;
-        playerData.speed = PlayerPrefs.HasKey("speed") ? PlayerPrefs.GetFloat("speed") : 100.0f;
-        playerData.damage = PlayerPrefs.HasKey("damage") ? PlayerPrefs.GetInt("damage") : 1;
-        playerData.reloadTime = PlayerPrefs.HasKey("reloadTime") ? PlayerPrefs.GetFloat("reloadTime") : 1.5f;
+        playerData.scrap = PlayerPrefs.GetInt("scrap");
+        playerData.health = PlayerPrefs.GetInt("health");
+        playerData.speed = PlayerPrefs.GetFloat("speed");
+        playerData.damage = PlayerPrefs.GetInt("damage");
+        playerData.reloadTime = PlayerPrefs.GetFloat("reloadTime");
 
-        currentLevel = PlayerPrefs.HasKey("currentLevel") ? PlayerPrefs.GetInt("currentLevel") : 0;
+        currentLevel = PlayerPrefs.GetInt("currentLevel");
+    }
+
+    public void ResetData()
+    {
+        PlayerPrefs.SetInt("scrap", 0);
+        PlayerPrefs.SetInt("health", 5);
+        PlayerPrefs.SetFloat("speed", 150);
+        PlayerPrefs.SetInt("damage", 1);
+        PlayerPrefs.SetFloat("reloadTime", 1.3f);
+
+        PlayerPrefs.SetInt("currentLevel", currentLevel);
+
+        PlayerPrefs.Save();
     }
 }

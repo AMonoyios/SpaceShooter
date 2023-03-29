@@ -5,8 +5,9 @@ using TMPro;
 
 public sealed class WaveManager : MonoSingleton<WaveManager>
 {
-    // Remove wave from here and get from player prefs the current level and then load that wave
     private const float exitLevelTimer = 3.0f;
+
+    public PlayerController player;
 
     [SerializeField]
     private TextMeshProUGUI guiText;
@@ -25,6 +26,7 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
     public void SpawnWave(int waveIndex)
     {
         currentWave = levelsData.levels[DataManager.Instance.currentLevel].waves[waveIndex];
+        Debug.Log($"Level: {DataManager.Instance.currentLevel}, Wave: {waveIndex}");
 
         currentWave.Init();
         currentWave.SpawnEnemies();

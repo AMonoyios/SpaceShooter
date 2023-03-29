@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -13,11 +14,13 @@ public sealed class Wave
 
     public void Init()
     {
+        Debug.Log($"Initializing wave... current enemies alive: {enemiesList.FindAll((enemy) => enemy.IsAlive).Count}");
         enemiesList.Clear();
         for (int i = 0; i < enemies.Length; i++)
         {
             enemiesList.Add(enemies[i].GetComponent<Enemy>());
         }
+        Debug.Log($"Current enemies list count: {enemiesList.Count}");
     }
 
     public void SpawnEnemies()
@@ -40,15 +43,18 @@ public sealed class Wave
     {
         get
         {
+            bool isThereAnyoneAlive = false;
             foreach (Enemy enemy in enemiesList)
             {
+                Debug.Log($"{enemy.name} health: {enemy.Health}");
                 if (enemy.IsAlive)
                 {
-                    return false;
+                    Debug.Log(enemy.name);
+                    isThereAnyoneAlive = true;
                 }
             }
 
-            return true;
+            return isThereAnyoneAlive;
         }
     }
 }

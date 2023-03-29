@@ -10,7 +10,7 @@ public sealed class EnviromentManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        float delta = (Camera.main.ViewportToWorldPoint(new Vector3(0.0f, 0.0f, Camera.main.farClipPlane)).z - PlayerController.Instance.transform.position.z) / sceneLayers.Length;
+        float delta = (Camera.main.ViewportToWorldPoint(new Vector3(0.0f, 0.0f, Camera.main.farClipPlane)).z - WaveManager.Instance.player.transform.position.z) / sceneLayers.Length;
         float newChildPos = delta;
         for (int i = 0; i < sceneLayers.Length; i++)
         {

@@ -7,7 +7,8 @@ public sealed class Bullet : MonoBehaviour
     [SerializeField]
     private ParticleSystem contactEffect;
 
-    public GameObject ignoreThis;
+    public GameObject owner;
+    public int damage;
 
     private Vector2 screenBounds;
     private const float padding = 1.0f;
@@ -29,29 +30,22 @@ public sealed class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        bool collided = false;
+        string ownerTag = owner.transform.tag;
+        string targetTag = "";
 
-        if (other.transform.CompareTag("Enemy") && other.gameObject != ignoreThis)
+        if (ownerTag.Equals("Enemy"))
         {
-            if (other.gameObject.TryGetComponent(out Enemy enemy))
-            {
-                enemy.TakeDamage(enemy.Damage);
-
-                collided = true;
-            }
+            targetTag = "Player";
         }
-        else if (other.transform.CompareTag("Player") && other.gameObject != ignoreThis)
+        else if (ownerTag.Equals("Player"))
         {
-            if (other.gameObject.TryGetComponent(out PlayerController player))
-            {
-                player.TakeDamage(DataManager.Instance.playerData.damage);
-
-                collided = true;
-            }
+            targetTag = "Enemy";
         }
 
-        if (collided)
+        if (!string.IsNullOrEmpty(targetTag) && other.CompareTag(targetTag))
         {
+            Debug.Log($"Bullet hit target {other.name} (Tag: {targetTag}) with damage of {damage}");
+            other.GetComponent<IDamagable>().TakeDamage(damage);
             StartCoroutine(DestroyBullet(true));
         }
     }

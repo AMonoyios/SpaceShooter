@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(RouteCreator))]
-public sealed class Enemy : MonoBehaviour
+public sealed class Enemy : MonoBehaviour, IDamagable
 {
     private RouteCreator routeCreator;
     private readonly List<Tuple<Vector2, Vector2, Vector2, Vector2>> points = new List<Tuple<Vector2, Vector2, Vector2, Vector2>>();
@@ -17,9 +17,10 @@ public sealed class Enemy : MonoBehaviour
     private DataScriptableObject enemyData;
 
     private int health;
+    private int damage;
 
-    public int Damage => enemyData.damage;
-    public bool IsAlive => health > 0.0f;
+    public int Health => health;
+    public bool IsAlive => health > 0;
 
     [SerializeField]
     private GameObject bulletPrefab;
@@ -41,6 +42,7 @@ public sealed class Enemy : MonoBehaviour
         transform.position = points[0].Item1;
 
         health = enemyData.health;
+        damage = enemyData.damage;
     }
 
     public void Despawn(bool ignoreNextWave = false)
@@ -100,8 +102,10 @@ public sealed class Enemy : MonoBehaviour
 
     private void Shoot()
     {
-        GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-        bullet.GetComponent<Bullet>().ignoreThis = gameObject;
+        GameObject bulletGO = Instantiate(bulletPrefab, transform.position, transform.rotation);
+        Bullet bullet = bulletGO.GetComponent<Bullet>();
+        bullet.owner = gameObject;
+        bullet.damage = damage;
         bullet.GetComponent<Rigidbody2D>().AddForce(enemyData.reloadTime * bulletForce * transform.up, ForceMode2D.Impulse);
     }
 

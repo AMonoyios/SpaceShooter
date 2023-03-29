@@ -808,6 +808,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 063259c9947c1c042be15900db81059d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 941234418}
   guiText: {fileID: 1898946527}
   levelsData: {fileID: 11400000, guid: cfa1466b1717c804e8e7cf7bd6d6383b, type: 2}
 --- !u!114 &1714888097
