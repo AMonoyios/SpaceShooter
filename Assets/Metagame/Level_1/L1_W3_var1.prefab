@@ -162,5 +162,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd59703ca1c7a8419614fae389ef6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 11400000, guid: ac3c469f4f1df384b843f75d990a3f43, type: 2}
+  scrap: 3
+  health: 5
+  speed: 100
+  damage: 1
+  reloadTime: 1.2
   bulletPrefab: {fileID: 5811866227059200450, guid: dbbd26e695b8b3f4eb42d34f5f0dfb1a, type: 3}

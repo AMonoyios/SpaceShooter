@@ -13,18 +13,23 @@ public sealed class Enemy : MonoBehaviour, IDamagable
     private bool moving = false;
     private float elapsedTime = 0.0f;
 
-    [SerializeField]
-    private DataScriptableObject enemyData;
-
-    private int health;
-    private int damage;
-
+    [Header("Stats")]
+    [SerializeField, Tooltip("How many scrap the enemy will drop after death"), Min(0)]
+    private int scrap = 0;
+    [SerializeField, Min(1)]
+    private int health = 5;
     public int Health => health;
-    public bool IsAlive => health > 0;
+    public bool IsAlive => Health > 0;
+    [SerializeField, Min(50.0f)]
+    private float speed = 100.0f;
+    [SerializeField, Min(1)]
+    private int damage = 1;
+    [SerializeField, Min(0.5f)]
+    private float reloadTime = 1.5f;
 
+    [Header("Bullet")]
     [SerializeField]
     private GameObject bulletPrefab;
-
     private float timer = 0.0f;
     private const float bulletForce = 2.5f;
 
@@ -40,9 +45,6 @@ public sealed class Enemy : MonoBehaviour, IDamagable
         }
 
         transform.position = points[0].Item1;
-
-        health = enemyData.health;
-        damage = enemyData.damage;
     }
 
     public void Despawn(bool ignoreNextWave = false)
@@ -60,7 +62,7 @@ public sealed class Enemy : MonoBehaviour, IDamagable
     private void Update()
     {
         timer += Time.deltaTime;
-        if (timer >= enemyData.reloadTime)
+        if (timer >= reloadTime)
         {
             Shoot();
             timer = 0.0f;
@@ -88,7 +90,7 @@ public sealed class Enemy : MonoBehaviour, IDamagable
                                  (3.0f * (1.0f - elapsedTime) * Mathf.Pow(elapsedTime, 2.0f) * points.Item3) +
                                  (Mathf.Pow(elapsedTime, 3.0f) * points.Item4);
 
-            elapsedTime += Time.deltaTime * enemyData.speed / 100.0f;
+            elapsedTime += Time.deltaTime * speed / 100.0f;
 
             yield return new WaitForEndOfFrame();
         }
@@ -106,7 +108,7 @@ public sealed class Enemy : MonoBehaviour, IDamagable
         Bullet bullet = bulletGO.GetComponent<Bullet>();
         bullet.owner = gameObject;
         bullet.damage = damage;
-        bullet.GetComponent<Rigidbody2D>().AddForce(enemyData.reloadTime * bulletForce * transform.up, ForceMode2D.Impulse);
+        bullet.GetComponent<Rigidbody2D>().AddForce(reloadTime * bulletForce * transform.up, ForceMode2D.Impulse);
     }
 
     public void TakeDamage(int amount)
@@ -115,7 +117,7 @@ public sealed class Enemy : MonoBehaviour, IDamagable
 
         if (!IsAlive)
         {
-            DataManager.Instance.playerData.scrap += enemyData.scrap;
+            DataManager.Instance.playerData.scrap += scrap;
 
             Despawn();
         }

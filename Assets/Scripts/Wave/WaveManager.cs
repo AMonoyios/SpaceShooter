@@ -20,13 +20,13 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
     private void Awake()
     {
         DataManager.Instance.LoadData();
+
         StartCoroutine(CountdownTimer(3.0f, () => SpawnWave(currentWaveIndex)));
     }
 
     public void SpawnWave(int waveIndex)
     {
         currentWave = levelsData.levels[DataManager.Instance.currentLevel].waves[waveIndex];
-        Debug.Log($"Level: {DataManager.Instance.currentLevel}, Wave: {waveIndex}");
 
         currentWave.Init();
         currentWave.SpawnEnemies();
@@ -35,6 +35,7 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
     public void TryProceedToNextWave()
     {
         Debug.Log("Try Proceed to next wave");
+
         if (currentWave.IsWaveCompleted)
         {
             ProceedToNextWave();
