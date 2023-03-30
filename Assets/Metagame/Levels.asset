@@ -34,3 +34,24 @@ MonoBehaviour:
     - enemies:
       - {fileID: 1945448245530176565, guid: c5ca786e7d9316e4286d075f4baa09ff, type: 3}
       spawnTimer: 5
+  - waves:
+    - enemies:
+      - {fileID: 1284232563612203200, guid: f0a0a2a42cb99904fbf52b67c6d415f7, type: 3}
+      spawnTimer: 0
+    - enemies:
+      - {fileID: 1239728491422173633, guid: 1b24479f58d9a1b44ab1dd4e3315360a, type: 3}
+      - {fileID: 1239728491422173633, guid: da356b83c39566b41a3fa1a28c3b8ece, type: 3}
+      spawnTimer: 3
+    - enemies:
+      - {fileID: 1945448245530176565, guid: 94a2cc3b0a89fd24e80e6683ea8d28ca, type: 3}
+      spawnTimer: 5
+  - waves:
+    - enemies:
+      - {fileID: 1284232563612203200, guid: 89fce1aac00f2134fa8eec8932706e21, type: 3}
+      spawnTimer: 0
+    - enemies:
+      - {fileID: 1239728491422173633, guid: 65b20965543259f4eb08e7654026ca4d, type: 3}
+      spawnTimer: 3
+    - enemies:
+      - {fileID: 1945448245530176565, guid: 3086a64ab8605334fa805b4f45570f03, type: 3}
+      spawnTimer: 5

@@ -72,6 +72,10 @@ public sealed class Enemy : MonoBehaviour, IDamagable
             return;
         }
 
+        if (checkpointIndex == 0)
+        {
+            transform.position = points[checkpointIndex].Item1;
+        }
         if (Vector2.Distance(transform.position, points[checkpointIndex].Item1) <= routeCreator.collisionDistance)
         {
             StartCoroutine(Move(points[checkpointIndex]));

@@ -692,13 +692,17 @@ MonoBehaviour:
   sfxImg: {fileID: 827782875}
   sfxOnImg: {fileID: 21300000, guid: 446823fabe1daa9488e8839b3811ad68, type: 3}
   sfxOffImg: {fileID: 21300000, guid: 4d4f18fba1be7614e9f1c51c8a1bab18, type: 3}
-  speedStatText: {fileID: 158963933}
-  reloadeStatText: {fileID: 1479037944}
-  healthStatText: {fileID: 1647623237}
-  scrapStatText: {fileID: 475874463}
+  currentSpeedTxt: {fileID: 158963933}
+  currentReloadTxt: {fileID: 1479037944}
+  currentHealthTxt: {fileID: 1647623237}
+  currentScrapTxt: {fileID: 475874463}
   upgradeSpeedBtn: {fileID: 1247163114}
   upgradeRelodeBtn: {fileID: 1744926987}
   upgradeHealthBtn: {fileID: 317959025}
+  upgradeSpeedTxt: {fileID: 2130678521}
+  upgradeReloadTxt: {fileID: 1448363102}
+  upgradeHealthTxt: {fileID: 1977424430}
+  upgradeCost: 10
   speedUpgradeValue: 10
   reloadTimeUpgradeValue: 0.1
   healthUpgradeValue: 1
@@ -3916,7 +3920,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: +0.1 Reload for 5 scrap
+  m_text: -999 Reload for 999 scrap
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5091,7 +5095,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: +1 health for 5 scrap
+  m_text: +999 health for 999 scrap
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5539,7 +5543,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: +10 Speed for 5 scrap
+  m_text: +999 Speed for 999 scrap
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

@@ -8,13 +8,13 @@ public sealed class UIUpgradesPanel : UIBasePanel
 {
     [Header("Upgrades Panel Properties")]
     [SerializeField]
-    private TextMeshProUGUI speedStatText;
+    private TextMeshProUGUI currentSpeedTxt;
     [SerializeField]
-    private TextMeshProUGUI reloadeStatText;
+    private TextMeshProUGUI currentReloadTxt;
     [SerializeField]
-    private TextMeshProUGUI healthStatText;
+    private TextMeshProUGUI currentHealthTxt;
     [SerializeField]
-    private TextMeshProUGUI scrapStatText;
+    private TextMeshProUGUI currentScrapTxt;
 
     [Header("Upgrade Buttons")]
     [SerializeField]
@@ -24,8 +24,17 @@ public sealed class UIUpgradesPanel : UIBasePanel
     [SerializeField]
     private Button upgradeHealthBtn;
 
-    private const int upgradeCost = 5;
+    [Header("Upgrade Cost Texts")]
+    [SerializeField]
+    private TextMeshProUGUI upgradeSpeedTxt;
+    [SerializeField]
+    private TextMeshProUGUI upgradeReloadTxt;
+    [SerializeField]
+    private TextMeshProUGUI upgradeHealthTxt;
+
     [Header("Upgrades")]
+    [SerializeField, Min(1)]
+    private int upgradeCost = 10;
     [SerializeField]
     private float speedUpgradeValue = 10.0f;
     [SerializeField]
@@ -45,6 +54,15 @@ public sealed class UIUpgradesPanel : UIBasePanel
         upgradeSpeedBtn.onClick.AddListener(UpgradeSpeed);
         upgradeRelodeBtn.onClick.AddListener(UpgradeReload);
         upgradeHealthBtn.onClick.AddListener(UpgradeHealth);
+
+        upgradeSpeedTxt.text = $"+{speedUpgradeValue} Speed for {upgradeCost} scrap";
+        upgradeReloadTxt.text = $"-{reloadTimeUpgradeValue} Speed for {upgradeCost} scrap";
+        upgradeHealthTxt.text = $"+{healthUpgradeValue} Speed for {upgradeCost} scrap";
+    }
+
+    private void OnEnable()
+    {
+        UpdateStatsDisplay();
     }
 
     private void ShowMenuPanel()
@@ -74,7 +92,7 @@ public sealed class UIUpgradesPanel : UIBasePanel
             SoundManager.Instance.PlaySound(SoundManager.SoundType.Upgrade);
 
             DataManager.Instance.playerData.scrap -= upgradeCost;
-            DataManager.Instance.playerData.reloadTime += reloadTimeUpgradeValue;
+            DataManager.Instance.playerData.reloadTime -= reloadTimeUpgradeValue;
             UpdateStatsDisplay();
         }
     }
@@ -95,9 +113,9 @@ public sealed class UIUpgradesPanel : UIBasePanel
     {
         DataManager.Instance.SaveData();
 
-        speedStatText.text = "Speed " + DataManager.Instance.playerData.speed.ToString();
-        reloadeStatText.text = "Reload " + DataManager.Instance.playerData.reloadTime.ToString();
-        healthStatText.text = "Health " + DataManager.Instance.playerData.health.ToString();
-        scrapStatText.text = "Scrap " + DataManager.Instance.playerData.scrap.ToString();
+        currentSpeedTxt.text = "Speed " + DataManager.Instance.playerData.speed.ToString();
+        currentReloadTxt.text = "Reload " + DataManager.Instance.playerData.reloadTime.ToString();
+        currentHealthTxt.text = "Health " + DataManager.Instance.playerData.health.ToString();
+        currentScrapTxt.text = "Scrap " + DataManager.Instance.playerData.scrap.ToString();
     }
 }
