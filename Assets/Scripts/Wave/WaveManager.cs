@@ -98,7 +98,11 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
 
                 ShowUIText("Cleared level!");
                 SoundManager.Instance.PlaySound(SoundManager.SoundType.Completed);
-                DataManager.Instance.playerData.completedLevels = DataManager.Instance.currentLevel;
+
+                if (DataManager.Instance.currentLevel >= DataManager.Instance.playerData.completedLevels)
+                {
+                    DataManager.Instance.playerData.completedLevels = DataManager.Instance.currentLevel;
+                }
                 StartCoroutine(GoToMenu());
             }
 
