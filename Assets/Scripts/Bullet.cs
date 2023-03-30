@@ -1,13 +1,14 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public sealed class Bullet : MonoBehaviour
 {
     [SerializeField]
-    private ParticleSystem contactEffect;
+    private GameObject explosionEffectPrefab;
 
+    [HideInInspector]
     public GameObject owner;
+    [HideInInspector]
     public int damage;
 
     private Vector2 screenBounds;
@@ -19,17 +20,22 @@ public sealed class Bullet : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update()
+    private void FixedUpdate()
     {
         if(transform.position.x < (-screenBounds.x - padding) / 2.0f || transform.position.x > (screenBounds.x + padding) / 2.0f ||
             transform.position.y < (-screenBounds.y - padding) / 2.0f || transform.position.y > (screenBounds.y + padding) / 2.0f)
         {
-            StartCoroutine(DestroyBullet(false));
+            DestroyBullet(false);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (WaveManager.Instance.gameState == GameState.Idle)
+        {
+            return;
+        }
+
         string ownerTag = owner.transform.tag;
         string targetTag = "";
 
@@ -46,17 +52,17 @@ public sealed class Bullet : MonoBehaviour
         {
             Debug.Log($"Bullet hit target {other.name} (Tag: {targetTag}) with damage of {damage}");
             other.GetComponent<IDamagable>().TakeDamage(damage);
-            StartCoroutine(DestroyBullet(true));
+            DestroyBullet(true);
         }
     }
 
-    private IEnumerator DestroyBullet(bool triggerEffects)
+    private void DestroyBullet(bool triggerEffects)
     {
         if (triggerEffects)
         {
-            contactEffect.gameObject.SetActive(true);
+            SoundManager.Instance.PlaySound(SoundManager.SoundType.Explode);
 
-            yield return new WaitForSeconds(contactEffect.main.duration);
+            Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
         }
 
         Destroy(gameObject);

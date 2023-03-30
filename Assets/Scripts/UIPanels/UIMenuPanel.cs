@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public sealed class UIMenuPanel : UIBasePanel
 {
-    [Header("Buttons")]
+    [Header("Menu Panel Properties")]
     [SerializeField]
     private Button levelsBtn;
     [SerializeField]
@@ -13,47 +13,35 @@ public sealed class UIMenuPanel : UIBasePanel
     [SerializeField]
     private Button quitBtn;
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
+
         levelsBtn.onClick.AddListener(ShowLevelsPanel);
         upgradesBtn.onClick.AddListener(ShowUpgradesPanel);
         quitBtn.onClick.AddListener(QuitGame);
     }
 
-    public override void HidePanel()
-    {
-        if (!gameObject.activeSelf)
-        {
-            return;
-        }
-
-        gameObject.SetActive(false);
-    }
-
-    public override void ShowPanel()
-    {
-        if (gameObject.activeSelf)
-        {
-            return;
-        }
-
-        gameObject.SetActive(true);
-    }
-
     private void ShowLevelsPanel()
     {
+        SoundManager.Instance.PlaySound(SoundManager.SoundType.Click);
+
         UIPanelsManager.Instance.HideAllPanels();
         UIPanelsManager.Instance.levelsPanel.ShowPanel();
     }
 
     private void ShowUpgradesPanel()
     {
+        SoundManager.Instance.PlaySound(SoundManager.SoundType.Click);
+
         UIPanelsManager.Instance.HideAllPanels();
         UIPanelsManager.Instance.upgradesPanel.ShowPanel();
     }
 
     private void QuitGame()
     {
+        SoundManager.Instance.PlaySound(SoundManager.SoundType.Click);
+
         DataManager.Instance.SaveData();
 
         Debug.LogWarning("Closing game");

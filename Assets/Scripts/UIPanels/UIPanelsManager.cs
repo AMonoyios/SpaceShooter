@@ -20,7 +20,7 @@ public sealed class UIPanelsManager : MonoSingleton<UIPanelsManager>
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Debug.LogWarning("Deleting player prefs");
+            Debug.LogWarning("Reset player prefs");
             DataManager.Instance.ResetData();
         }
     }

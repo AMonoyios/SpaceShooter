@@ -6,17 +6,16 @@ using TMPro;
 
 public sealed class UILevelsPanel : UIBasePanel
 {
-    [Header("Buttons")]
-    [SerializeField]
-    private Button backBtn;
-
-    [Header("Levels")]
+    [Header("Levels Panel Properties")]
     [SerializeField]
     private Transform contentTransform;
     [SerializeField]
     private GameObject levelButtonPrefab;
     [SerializeField]
     private LevelsScriptableObject levels;
+
+    [SerializeField]
+    private Button backBtn;
 
     private void Start()
     {
@@ -28,38 +27,22 @@ public sealed class UILevelsPanel : UIBasePanel
 
         for (int levelIndex = 0; levelIndex < levels.levels.Count; levelIndex++)
         {
-            LevelIndex level = Instantiate(levelButtonPrefab, contentTransform).GetComponent<LevelIndex>();
+            Level level = Instantiate(levelButtonPrefab, contentTransform).GetComponent<Level>();
             level.Init(levelIndex);
         }
     }
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
+
         backBtn.onClick.AddListener(ShowMenuPanel);
-    }
-
-    public override void ShowPanel()
-    {
-        if (gameObject.activeSelf)
-        {
-            return;
-        }
-
-        gameObject.SetActive(true);
-    }
-
-    public override void HidePanel()
-    {
-        if (!gameObject.activeSelf)
-        {
-            return;
-        }
-
-        gameObject.SetActive(false);
     }
 
     private void ShowMenuPanel()
     {
+        SoundManager.Instance.PlaySound(SoundManager.SoundType.Click);
+
         UIPanelsManager.Instance.HideAllPanels();
         UIPanelsManager.Instance.menuPanel.ShowPanel();
     }

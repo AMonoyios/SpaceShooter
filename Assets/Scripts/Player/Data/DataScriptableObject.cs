@@ -16,4 +16,12 @@ public class DataScriptableObject : ScriptableObject
     public int damage = 1;
     [Min(0.5f)]
     public float reloadTime = 1.5f;
+
+    [Space(10.0f)]
+
+    [Min(0)]
+    public int completedLevels = -1;
+
+    [Space(10.0f)]
+    public bool isAudioOn = true;
 }

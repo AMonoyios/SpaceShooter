@@ -17,9 +17,15 @@ public sealed class Enemy : MonoBehaviour, IDamagable
     [SerializeField, Tooltip("How many scrap the enemy will drop after death"), Min(0)]
     private int scrap = 0;
     [SerializeField, Min(1)]
-    private int health = 5;
-    public int Health => health;
-    public bool IsAlive => Health > 0;
+    private int health;
+    public bool IsAlive
+    {
+        get
+        {
+            Debug.Log($"{gameObject.name} health: {health}");
+            return health > 0;
+        }
+    }
     [SerializeField, Min(50.0f)]
     private float speed = 100.0f;
     [SerializeField, Min(1)]
@@ -37,6 +43,11 @@ public sealed class Enemy : MonoBehaviour, IDamagable
     {
         routeCreator = GetComponent<RouteCreator>();
 
+        Spawn();
+    }
+
+    private void Spawn()
+    {
         gameObject.SetActive(true);
 
         for (int i = 0; i < routeCreator.route.NumSegments; i++)
@@ -45,18 +56,6 @@ public sealed class Enemy : MonoBehaviour, IDamagable
         }
 
         transform.position = points[0].Item1;
-    }
-
-    public void Despawn(bool ignoreNextWave = false)
-    {
-        Debug.Log("Despawning enemy");
-
-        if (!ignoreNextWave)
-        {
-            WaveManager.Instance.TryProceedToNextWave();
-        }
-
-        Destroy(gameObject);
     }
 
     private void Update()
@@ -104,6 +103,8 @@ public sealed class Enemy : MonoBehaviour, IDamagable
 
     private void Shoot()
     {
+        SoundManager.Instance.PlaySound(SoundManager.SoundType.Shoot);
+
         GameObject bulletGO = Instantiate(bulletPrefab, transform.position, transform.rotation);
         Bullet bullet = bulletGO.GetComponent<Bullet>();
         bullet.owner = gameObject;
@@ -119,7 +120,7 @@ public sealed class Enemy : MonoBehaviour, IDamagable
         {
             DataManager.Instance.playerData.scrap += scrap;
 
-            Despawn();
+            WaveManager.Instance.DespawnEnemy(this);
         }
     }
 }

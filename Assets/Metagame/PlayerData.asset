@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrap: 0
   health: 5
-  speed: 100
+  speed: 150
   damage: 1
-  reloadTime: 1.5
+  reloadTime: 1.3

@@ -170,4 +170,4 @@ MonoBehaviour:
   speed: 75
   damage: 1
   reloadTime: 1.5
-  bulletPrefab: {fileID: 5811866227059200450, guid: dbbd26e695b8b3f4eb42d34f5f0dfb1a, type: 3}
+  bulletPrefab: {fileID: 5811866227059200450, guid: 1b6f7c57ffd3b17429a73d869c785ae1, type: 3}

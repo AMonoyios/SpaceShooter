@@ -6,11 +6,7 @@ using TMPro;
 
 public sealed class UIUpgradesPanel : UIBasePanel
 {
-    [Header("Buttons")]
-    [SerializeField]
-    private Button backBtn;
-
-    [Header("Stats")]
+    [Header("Upgrades Panel Properties")]
     [SerializeField]
     private TextMeshProUGUI speedStatText;
     [SerializeField]
@@ -37,8 +33,13 @@ public sealed class UIUpgradesPanel : UIBasePanel
     [SerializeField]
     private int healthUpgradeValue = 1;
 
-    private void Awake()
+    [SerializeField]
+    private Button backBtn;
+
+    public override void Awake()
     {
+        base.Awake();
+
         backBtn.onClick.AddListener(ShowMenuPanel);
 
         upgradeSpeedBtn.onClick.AddListener(UpgradeSpeed);
@@ -46,30 +47,10 @@ public sealed class UIUpgradesPanel : UIBasePanel
         upgradeHealthBtn.onClick.AddListener(UpgradeHealth);
     }
 
-    public override void ShowPanel()
-    {
-        if (gameObject.activeSelf)
-        {
-            return;
-        }
-
-        UpdateStatsDisplay();
-
-        gameObject.SetActive(true);
-    }
-
-    public override void HidePanel()
-    {
-        if (!gameObject.activeSelf)
-        {
-            return;
-        }
-
-        gameObject.SetActive(false);
-    }
-
     private void ShowMenuPanel()
     {
+        SoundManager.Instance.PlaySound(SoundManager.SoundType.Click);
+
         UIPanelsManager.Instance.HideAllPanels();
         UIPanelsManager.Instance.menuPanel.ShowPanel();
     }
@@ -78,6 +59,8 @@ public sealed class UIUpgradesPanel : UIBasePanel
     {
         if (DataManager.Instance.playerData.scrap >= upgradeCost)
         {
+            SoundManager.Instance.PlaySound(SoundManager.SoundType.Upgrade);
+
             DataManager.Instance.playerData.scrap -= upgradeCost;
             DataManager.Instance.playerData.speed += speedUpgradeValue;
             UpdateStatsDisplay();
@@ -88,6 +71,8 @@ public sealed class UIUpgradesPanel : UIBasePanel
     {
         if (DataManager.Instance.playerData.scrap >= upgradeCost)
         {
+            SoundManager.Instance.PlaySound(SoundManager.SoundType.Upgrade);
+
             DataManager.Instance.playerData.scrap -= upgradeCost;
             DataManager.Instance.playerData.reloadTime += reloadTimeUpgradeValue;
             UpdateStatsDisplay();
@@ -98,6 +83,8 @@ public sealed class UIUpgradesPanel : UIBasePanel
     {
         if (DataManager.Instance.playerData.scrap >= upgradeCost)
         {
+            SoundManager.Instance.PlaySound(SoundManager.SoundType.Upgrade);
+
             DataManager.Instance.playerData.scrap -= upgradeCost;
             DataManager.Instance.playerData.health += healthUpgradeValue;
             UpdateStatsDisplay();

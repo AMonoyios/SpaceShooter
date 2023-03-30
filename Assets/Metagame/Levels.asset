@@ -17,26 +17,20 @@ MonoBehaviour:
     - enemies:
       - {fileID: 1284232563612203200, guid: a3dc10710e88ad24cb4b7d055032e84c, type: 3}
       spawnTimer: 0
-      test: level0wave0
     - enemies:
       - {fileID: 1239728491422173633, guid: 3e5e5cc7bb68d9d4190deb99f7e10d56, type: 3}
       spawnTimer: 3
-      test: level0wave1
     - enemies:
       - {fileID: 1945448245530176565, guid: 3425927f5f5817c41b641d41d04b3f5d, type: 3}
       spawnTimer: 5
-      test: level0wave2
   - waves:
     - enemies:
       - {fileID: 1284232563612203200, guid: 1504c38310bdfe64f98be5f78da46c03, type: 3}
       - {fileID: 1284232563612203200, guid: 714b96d427bd97447818364e7c02f988, type: 3}
       spawnTimer: 0
-      test: level1wave0
     - enemies:
       - {fileID: 1239728491422173633, guid: 1ce316de6e5b4aa49b09150ba2a2f801, type: 3}
       spawnTimer: 3
-      test: level1wave1
     - enemies:
       - {fileID: 1945448245530176565, guid: c5ca786e7d9316e4286d075f4baa09ff, type: 3}
       spawnTimer: 5
-      test: level1wave2

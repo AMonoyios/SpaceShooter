@@ -65,6 +65,8 @@ public sealed class PlayerController : MonoBehaviour, IDamagable
 
     private void Shoot()
     {
+        SoundManager.Instance.PlaySound(SoundManager.SoundType.Shoot);
+
         GameObject bulletGO = Instantiate(bulletPrefab, transform.position, transform.rotation);
         Bullet bullet = bulletGO.GetComponent<Bullet>();
         bullet.owner = gameObject;
@@ -78,7 +80,7 @@ public sealed class PlayerController : MonoBehaviour, IDamagable
 
         if (health <= 0.0f)
         {
-            WaveManager.Instance.CompleteCurrentWave("Level Failed");
+            WaveManager.Instance.ShowUIText("Level Failed");
 
             StartCoroutine(WaveManager.Instance.GoToMenu());
         }
