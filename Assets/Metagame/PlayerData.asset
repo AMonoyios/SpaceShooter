@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45aee360cb5520942975dda3bae2b295, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  scrap: 0
+  scrap: 8
   health: 5
   speed: 150
   damage: 1
-  reloadTime: 1.3
+  reloadTime: 1.0999999
+  completedLevels: 2
+  isAudioOn: 1
