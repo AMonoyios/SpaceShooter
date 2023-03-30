@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(RouteCreator))]
-public sealed class Enemy : MonoBehaviour
+public sealed class Enemy : MonoBehaviour, IDamagable
 {
     private RouteCreator routeCreator;
     private readonly List<Tuple<Vector2, Vector2, Vector2, Vector2>> points = new List<Tuple<Vector2, Vector2, Vector2, Vector2>>();
@@ -13,17 +13,29 @@ public sealed class Enemy : MonoBehaviour
     private bool moving = false;
     private float elapsedTime = 0.0f;
 
-    [SerializeField]
-    private DataScriptableObject enemyData;
-
+    [Header("Stats")]
+    [SerializeField, Tooltip("How many scrap the enemy will drop after death"), Min(0)]
+    private int scrap = 0;
+    [SerializeField, Min(1)]
     private int health;
+    public bool IsAlive
+    {
+        get
+        {
+            Debug.Log($"{gameObject.name} health: {health}");
+            return health > 0;
+        }
+    }
+    [SerializeField, Min(50.0f)]
+    private float speed = 100.0f;
+    [SerializeField, Min(1)]
+    private int damage = 1;
+    [SerializeField, Min(0.5f)]
+    private float reloadTime = 1.5f;
 
-    public int Damage => enemyData.damage;
-    public bool IsAlive => health > 0.0f;
-
+    [Header("Bullet")]
     [SerializeField]
     private GameObject bulletPrefab;
-
     private float timer = 0.0f;
     private const float bulletForce = 2.5f;
 
@@ -31,6 +43,11 @@ public sealed class Enemy : MonoBehaviour
     {
         routeCreator = GetComponent<RouteCreator>();
 
+        Spawn();
+    }
+
+    private void Spawn()
+    {
         gameObject.SetActive(true);
 
         for (int i = 0; i < routeCreator.route.NumSegments; i++)
@@ -39,26 +56,12 @@ public sealed class Enemy : MonoBehaviour
         }
 
         transform.position = points[0].Item1;
-
-        health = enemyData.health;
-    }
-
-    public void Despawn(bool ignoreNextWave = false)
-    {
-        Debug.Log("Despawning enemy");
-
-        if (!ignoreNextWave)
-        {
-            WaveManager.Instance.TryProceedToNextWave();
-        }
-
-        Destroy(gameObject);
     }
 
     private void Update()
     {
         timer += Time.deltaTime;
-        if (timer >= enemyData.reloadTime)
+        if (timer >= reloadTime)
         {
             Shoot();
             timer = 0.0f;
@@ -86,7 +89,7 @@ public sealed class Enemy : MonoBehaviour
                                  (3.0f * (1.0f - elapsedTime) * Mathf.Pow(elapsedTime, 2.0f) * points.Item3) +
                                  (Mathf.Pow(elapsedTime, 3.0f) * points.Item4);
 
-            elapsedTime += Time.deltaTime * enemyData.speed / 100.0f;
+            elapsedTime += Time.deltaTime * speed / 100.0f;
 
             yield return new WaitForEndOfFrame();
         }
@@ -100,9 +103,13 @@ public sealed class Enemy : MonoBehaviour
 
     private void Shoot()
     {
-        GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-        bullet.GetComponent<Bullet>().ignoreThis = gameObject;
-        bullet.GetComponent<Rigidbody2D>().AddForce(enemyData.reloadTime * bulletForce * transform.up, ForceMode2D.Impulse);
+        SoundManager.Instance.PlaySound(SoundManager.SoundType.Shoot);
+
+        GameObject bulletGO = Instantiate(bulletPrefab, transform.position, transform.rotation);
+        Bullet bullet = bulletGO.GetComponent<Bullet>();
+        bullet.owner = gameObject;
+        bullet.damage = damage;
+        bullet.GetComponent<Rigidbody2D>().AddForce(reloadTime * bulletForce * transform.up, ForceMode2D.Impulse);
     }
 
     public void TakeDamage(int amount)
@@ -111,9 +118,9 @@ public sealed class Enemy : MonoBehaviour
 
         if (!IsAlive)
         {
-            DataManager.Instance.playerData.scrap += enemyData.scrap;
+            DataManager.Instance.playerData.scrap += scrap;
 
-            Despawn();
+            WaveManager.Instance.DespawnEnemy(this);
         }
     }
 }

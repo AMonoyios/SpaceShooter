@@ -2,71 +2,212 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
+
+public enum GameState
+{
+    Idle,
+    Playing
+}
 
 public sealed class WaveManager : MonoSingleton<WaveManager>
 {
-    // Remove wave from here and get from player prefs the current level and then load that wave
-    private const float exitLevelTimer = 3.0f;
+    public GameState gameState = GameState.Idle;
 
+    [Space(10.0f)]
+    public PlayerController player;
     [SerializeField]
     private TextMeshProUGUI guiText;
 
     [SerializeField]
     private LevelsScriptableObject levelsData;
     private int currentWaveIndex = 0;
-    private Wave currentWave;
+    private const float exitLevelTimer = 3.0f;
+
+    private readonly List<Enemy> enemies = new List<Enemy>();
 
     private void Awake()
     {
         DataManager.Instance.LoadData();
-        StartCoroutine(CountdownTimer(3.0f, () => SpawnWave(currentWaveIndex)));
+
+        currentWaveIndex = 0;
+
+        StartCoroutine
+        (
+            CountdownTimer(levelsData.levels[DataManager.Instance.currentLevel].waves[currentWaveIndex].spawnTimer,
+            () => SpawnWave(DataManager.Instance.currentLevel, currentWaveIndex))
+        );
     }
 
-    public void SpawnWave(int waveIndex)
+    private void SpawnWave(int levelIndex, int waveIndex)
     {
-        currentWave = levelsData.levels[DataManager.Instance.currentLevel].waves[waveIndex];
-
-        currentWave.Init();
-        currentWave.SpawnEnemies();
-    }
-
-    public void TryProceedToNextWave()
-    {
-        Debug.Log("Try Proceed to next wave");
-        if (currentWave.IsWaveCompleted)
+        for (int enemyIndex = 0; enemyIndex < levelsData.levels[levelIndex].waves[waveIndex].enemies.Length; enemyIndex++)
         {
-            ProceedToNextWave();
+            GameObject enemyGO = Instantiate(levelsData.levels[levelIndex].waves[waveIndex].enemies[enemyIndex]);
+            enemies.Add(enemyGO.GetComponent<Enemy>());
         }
+
+        gameState = GameState.Playing;
+
+        HideUIText();
     }
 
-    public void ProceedToNextWave()
+    public void DespawnEnemy(Enemy enemy)
     {
-        Debug.Log("Proceed to next");
-        if (levelsData.levels[DataManager.Instance.currentLevel].waves.Count > currentWaveIndex + 1)
+        if (enemies.Remove(enemy))
         {
-            currentWaveIndex++;
-            Debug.Log($"Entering wave {currentWaveIndex}...");
+            Debug.Log($"Removed {enemy.name} from enemies");
 
-            StartCoroutine(CountdownTimer(currentWave.spawnTimer, () => SpawnWave(currentWaveIndex)));
+            TryProceedToNextWave();
+
+            Destroy(enemy.gameObject);
         }
         else
         {
-            Debug.Log("Level cleared!");
-
-            CompleteCurrentWave("Level cleared!");
-
-            StartCoroutine(GoToMenu());
+            Debug.LogError($"{enemy.name} does not exist in enemies");
         }
-
-        DataManager.Instance.SaveData();
     }
 
-    public void CompleteCurrentWave(string waveCompletedText = "Wave Completed!")
+    private void TryProceedToNextWave()
     {
-        currentWave.DespawnEnemies(true);
+        Debug.Log("Try Proceed to next wave...");
 
+        if (IsWaveCompleted)
+        {
+            Debug.Log("Proceed to next wave");
+
+            ShowUIText("Level cleared!");
+
+            if (levelsData.levels[DataManager.Instance.currentLevel].waves.Count > currentWaveIndex + 1)
+            {
+                currentWaveIndex++;
+                Debug.Log($"Entering wave {currentWaveIndex}...");
+
+                StartCoroutine
+                (
+                    CountdownTimer
+                    (
+                        levelsData.levels[DataManager.Instance.currentLevel].waves[currentWaveIndex].spawnTimer,
+                        () => SpawnWave(DataManager.Instance.currentLevel, currentWaveIndex)
+                    )
+                );
+            }
+            else
+            {
+                Debug.Log("Level cleared!");
+
+                ShowUIText("Cleared level!");
+                SoundManager.Instance.PlaySound(SoundManager.SoundType.Completed);
+                DataManager.Instance.playerData.completedLevels = DataManager.Instance.currentLevel;
+                StartCoroutine(GoToMenu());
+            }
+
+            DataManager.Instance.SaveData();
+        }
+    }
+
+    // public void DespawnEnemy(Enemy enemy)
+    // {
+    //     if(enemies.Remove(enemy))
+    //     {
+    //         Debug.Log($"Removed {enemy.name} from enemies");
+    //     }
+
+    //     Destroy(enemy.gameObject);
+    // }
+
+    // public void DespawnWave(int levelIndex, int waveIndex)
+    // {
+    //     Debug.Log($"Despawning wave => Level: {levelIndex}, Wave: {waveIndex}");
+    //     foreach (Enemy enemy in enemies)
+    //     {
+    //         DespawnEnemy(enemy);
+    //     }
+    //     enemies.Clear();
+    //     Debug.Log($"Enemies count: {enemies.Count}");
+    // }
+
+    // public void CompleteWave(string waveCompletedText = "Wave Completed!")
+    // {
+    //     guiText.gameObject.SetActive(true);
+    //     guiText.text = waveCompletedText;
+    // }
+
+    // public void TryProceedToNextWave()
+    // {
+    //     Debug.Log("Try Proceed to next wave");
+
+    //     if (IsWaveCompleted)
+    //     {
+    //         Debug.Log("Proceed to next");
+    //         DespawnWave(DataManager.Instance.currentLevel, currentWaveIndex);
+    //         CompleteWave("Level cleared!");
+
+    //         if (levelsData.levels[DataManager.Instance.currentLevel].waves.Count > currentWaveIndex + 1)
+    //         {
+    //             currentWaveIndex++;
+    //             Debug.Log($"Entering wave {currentWaveIndex}...");
+
+    //             StartCoroutine
+    //             (
+    //                 CountdownTimer
+    //                 (
+    //                     levelsData.levels[DataManager.Instance.currentLevel].waves[currentWaveIndex].spawnTimer,
+    //                     () => SpawnWave(DataManager.Instance.currentLevel, currentWaveIndex)
+    //                 )
+    //             );
+    //         }
+    //         else
+    //         {
+    //             Debug.Log("Level cleared!");
+
+    //             StartCoroutine(GoToMenu());
+    //         }
+
+    //         DataManager.Instance.SaveData();
+    //     }
+    // }
+
+    public bool IsWaveCompleted
+    {
+        get
+        {
+            bool isThereAtLeastOneEnemyAlive = enemies.Any((enemy) => enemy.IsAlive);
+
+            if (isThereAtLeastOneEnemyAlive)
+            {
+                Debug.Log("There is still one enemy alive.");
+                gameState = GameState.Playing;
+                return false;
+            }
+
+            gameState = GameState.Idle;
+            return true;
+        }
+    }
+
+    public void ShowUIText(string text)
+    {
         guiText.gameObject.SetActive(true);
-        guiText.text = waveCompletedText;
+        guiText.text = text;
+    }
+    public void HideUIText()
+    {
+        guiText.text = "";
+        guiText.gameObject.SetActive(false);
+    }
+
+    private IEnumerator CountdownTimer(float duration, System.Action onComplete = null)
+    {
+        while (duration > 0.0f)
+        {
+            ShowUIText(Mathf.FloorToInt(duration).ToString());
+            yield return new WaitForSeconds(1.0f);
+            duration--;
+        }
+
+        HideUIText();
+        onComplete?.Invoke();
     }
 
     public IEnumerator GoToMenu()
@@ -74,20 +215,5 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
         yield return new WaitForSeconds(exitLevelTimer);
 
         SceneManager.Instance.LoadScene("Menu");
-    }
-
-    private IEnumerator CountdownTimer(float duration, System.Action onComplete = null)
-    {
-        guiText.gameObject.SetActive(true);
-
-        while (duration > 0.0f)
-        {
-            guiText.text = Mathf.FloorToInt(duration).ToString();
-            yield return new WaitForSeconds(1.0f);
-            duration--;
-        }
-
-        guiText.gameObject.SetActive(false);
-        onComplete?.Invoke();
     }
 }

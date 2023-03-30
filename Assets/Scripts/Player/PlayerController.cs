@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public sealed class PlayerController : MonoSingleton<PlayerController>
+public sealed class PlayerController : MonoBehaviour, IDamagable
 {
     private Vector3 touchPosition;
     private Rigidbody2D rb;
@@ -17,6 +17,7 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
     [SerializeField]
     private TextMeshProUGUI playerHealthText;
     private int health;
+    private int damage;
 
     private float timer = 0.0f;
 
@@ -30,6 +31,7 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
         transform.position = new Vector3(Camera.main.transform.position.x, spawnPos, 0.0f);
 
         health = DataManager.Instance.playerData.health;
+        damage = DataManager.Instance.playerData.damage;
 
         UpdatePlayerHealthDisplay();
     }
@@ -63,9 +65,13 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
 
     private void Shoot()
     {
-        GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
-        bullet.GetComponent<Bullet>().ignoreThis = gameObject;
-        bullet.GetComponent<Rigidbody2D>().AddForce(transform.up * bulletForce, ForceMode2D.Impulse);
+        SoundManager.Instance.PlaySound(SoundManager.SoundType.Shoot);
+
+        GameObject bulletGO = Instantiate(bulletPrefab, transform.position, transform.rotation);
+        Bullet bullet = bulletGO.GetComponent<Bullet>();
+        bullet.owner = gameObject;
+        bullet.damage = damage;
+        bulletGO.GetComponent<Rigidbody2D>().AddForce(transform.up * bulletForce, ForceMode2D.Impulse);
     }
 
     public void TakeDamage(int amount)
@@ -74,7 +80,7 @@ public sealed class PlayerController : MonoSingleton<PlayerController>
 
         if (health <= 0.0f)
         {
-            WaveManager.Instance.CompleteCurrentWave("Level Failed");
+            WaveManager.Instance.ShowUIText("Level Failed");
 
             StartCoroutine(WaveManager.Instance.GoToMenu());
         }

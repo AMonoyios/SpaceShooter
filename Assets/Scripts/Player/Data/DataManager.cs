@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DataManager : MonoSingleton<DataManager>
+public class DataManager : MonoPersistentSingleton<DataManager>
 {
     public DataScriptableObject playerData;
     public int currentLevel;
@@ -16,6 +16,10 @@ public class DataManager : MonoSingleton<DataManager>
         PlayerPrefs.SetFloat("reloadTime", playerData.reloadTime);
 
         PlayerPrefs.SetInt("currentLevel", currentLevel);
+        PlayerPrefs.SetInt("completedLevels", playerData.completedLevels);
+
+        int isAudioOn_INTVALUE = playerData.isAudioOn ? 1 : 0;
+        PlayerPrefs.SetInt("isAudioOn", isAudioOn_INTVALUE);
 
         PlayerPrefs.Save();
     }
@@ -24,12 +28,34 @@ public class DataManager : MonoSingleton<DataManager>
     {
         Debug.Log("Loading data...");
 
-        playerData.scrap = PlayerPrefs.HasKey("scrap") ? PlayerPrefs.GetInt("scrap") : 0;
-        playerData.health = PlayerPrefs.HasKey("health") ? PlayerPrefs.GetInt("health") : 5;
-        playerData.speed = PlayerPrefs.HasKey("speed") ? PlayerPrefs.GetFloat("speed") : 100.0f;
-        playerData.damage = PlayerPrefs.HasKey("damage") ? PlayerPrefs.GetInt("damage") : 1;
-        playerData.reloadTime = PlayerPrefs.HasKey("reloadTime") ? PlayerPrefs.GetFloat("reloadTime") : 1.5f;
+        playerData.scrap = PlayerPrefs.GetInt("scrap", playerData.scrap);
+        playerData.health = PlayerPrefs.GetInt("health", playerData.health);
+        playerData.speed = PlayerPrefs.GetFloat("speed", playerData.speed);
+        playerData.damage = PlayerPrefs.GetInt("damage", playerData.damage);
+        playerData.reloadTime = PlayerPrefs.GetFloat("reloadTime", playerData.reloadTime);
 
-        currentLevel = PlayerPrefs.HasKey("currentLevel") ? PlayerPrefs.GetInt("currentLevel") : 0;
+        currentLevel = PlayerPrefs.GetInt("currentLevel", currentLevel);
+        playerData.completedLevels = PlayerPrefs.GetInt("completedLevels", playerData.completedLevels);
+
+        int isAudioOn_INTVALUE = PlayerPrefs.GetInt("isAudioOn", playerData.isAudioOn ? 1 : 0);
+        playerData.isAudioOn = isAudioOn_INTVALUE == 1;
+    }
+
+    public void ResetData()
+    {
+        PlayerPrefs.SetInt("scrap", 0);
+        PlayerPrefs.SetInt("health", 5);
+        PlayerPrefs.SetFloat("speed", 150);
+        PlayerPrefs.SetInt("damage", 1);
+        PlayerPrefs.SetFloat("reloadTime", 1.3f);
+
+        PlayerPrefs.SetInt("currentLevel", 0);
+        PlayerPrefs.SetInt("completedLevels", -1);
+
+        PlayerPrefs.SetInt("isAudioOn", 1);
+
+        PlayerPrefs.Save();
+
+        LoadData();
     }
 }

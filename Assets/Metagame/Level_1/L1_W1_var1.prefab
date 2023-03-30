@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1284232563612203200}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: -0.02, y: 0.99, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -134,12 +134,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   route:
     checkpoints:
-    - {x: -1.5325245, y: 0.98942435}
-    - {x: -1.5300509, y: 0.008149743}
-    - {x: 1.5818272, y: -0.006567061}
-    - {x: 1.5818081, y: 0.98890436}
-    - {x: 1.5817885, y: 2.0062048}
-    - {x: -1.5350215, y: 1.980009}
+    - {x: -1.9744098, y: 0.98942447}
+    - {x: -1.3248899, y: 0.3870307}
+    - {x: 0.6349302, y: 2.3298628}
+    - {x: -0.012135029, y: 3.0096009}
+    - {x: -0.71354926, y: 3.7464323}
+    - {x: -2.7007136, y: 1.6630312}
     isClosed: 1
     autoSetControlPoints: 0
   routeGizmoColors:
@@ -162,5 +162,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd59703ca1c7a8419614fae389ef6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData: {fileID: 11400000, guid: 07373362bcaa6e34a9d97d65a6dbc150, type: 2}
-  bulletPrefab: {fileID: 5811866227059200450, guid: dbbd26e695b8b3f4eb42d34f5f0dfb1a, type: 3}
+  scrap: 1
+  health: 2
+  speed: 75
+  damage: 1
+  reloadTime: 1.75
+  bulletPrefab: {fileID: 5811866227059200450, guid: 1b6f7c57ffd3b17429a73d869c785ae1, type: 3}
