@@ -2,6 +2,13 @@
 
 ## Change logs
 
+### 0.0.10
+- Refactor wave manager
+- Refactor panels
+- Fixed collisions check
+- Implemented sound manager
+- Optimizations and bug fixes
+
 ### 0.0.9
 - Expanded level initialization
 - Optimizations and bug fixes
