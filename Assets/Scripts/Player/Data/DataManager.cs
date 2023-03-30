@@ -3,7 +3,7 @@ using UnityEngine;
 public class DataManager : MonoPersistentSingleton<DataManager>
 {
     public DataScriptableObject playerData;
-    public int currentLevel;
+    public int currentLevel = 0;
 
     public void SaveData()
     {
@@ -28,16 +28,16 @@ public class DataManager : MonoPersistentSingleton<DataManager>
     {
         Debug.Log("Loading data...");
 
-        playerData.scrap = PlayerPrefs.GetInt("scrap", playerData.scrap);
-        playerData.health = PlayerPrefs.GetInt("health", playerData.health);
-        playerData.speed = PlayerPrefs.GetFloat("speed", playerData.speed);
-        playerData.damage = PlayerPrefs.GetInt("damage", playerData.damage);
-        playerData.reloadTime = PlayerPrefs.GetFloat("reloadTime", playerData.reloadTime);
+        playerData.scrap = PlayerPrefs.GetInt("scrap", 0);
+        playerData.health = PlayerPrefs.GetInt("health", 5);
+        playerData.speed = PlayerPrefs.GetFloat("speed", 150);
+        playerData.damage = PlayerPrefs.GetInt("damage", 1);
+        playerData.reloadTime = PlayerPrefs.GetFloat("reloadTime", 1.3f);
 
-        currentLevel = PlayerPrefs.GetInt("currentLevel", currentLevel);
-        playerData.completedLevels = PlayerPrefs.GetInt("completedLevels", playerData.completedLevels);
+        currentLevel = PlayerPrefs.GetInt("currentLevel", 0);
+        playerData.completedLevels = PlayerPrefs.GetInt("completedLevels", -1);
 
-        int isAudioOn_INTVALUE = PlayerPrefs.GetInt("isAudioOn", playerData.isAudioOn ? 1 : 0);
+        int isAudioOn_INTVALUE = PlayerPrefs.GetInt("isAudioOn", 1);
         playerData.isAudioOn = isAudioOn_INTVALUE == 1;
     }
 
