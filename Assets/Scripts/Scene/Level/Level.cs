@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using TMPro;
 
+/// <summary>
+///     Class that controls the current level
+/// </summary>
 [RequireComponent(typeof(Button))]
 public sealed class Level : MonoBehaviour
 {

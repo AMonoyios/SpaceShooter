@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+///     Manager that handles all data of player
+/// </summary>
 public class DataManager : MonoPersistentSingleton<DataManager>
 {
     public DataScriptableObject playerData;
@@ -30,7 +33,7 @@ public class DataManager : MonoPersistentSingleton<DataManager>
 
         playerData.scrap = PlayerPrefs.GetInt("scrap", 0);
         playerData.health = PlayerPrefs.GetInt("health", 5);
-        playerData.speed = PlayerPrefs.GetFloat("speed", 150);
+        playerData.speed = PlayerPrefs.GetFloat("speed", 175);
         playerData.damage = PlayerPrefs.GetInt("damage", 1);
         playerData.reloadTime = PlayerPrefs.GetFloat("reloadTime", 1.3f);
 
@@ -41,11 +44,14 @@ public class DataManager : MonoPersistentSingleton<DataManager>
         playerData.isAudioOn = isAudioOn_INTVALUE == 1;
     }
 
+    /// <summary>
+    ///     Resets all data of player. This is not being used in game, testing purposed only
+    /// </summary>
     public void ResetData()
     {
         PlayerPrefs.SetInt("scrap", 0);
         PlayerPrefs.SetInt("health", 5);
-        PlayerPrefs.SetFloat("speed", 150);
+        PlayerPrefs.SetFloat("speed", 175);
         PlayerPrefs.SetInt("damage", 1);
         PlayerPrefs.SetFloat("reloadTime", 1.3f);
 

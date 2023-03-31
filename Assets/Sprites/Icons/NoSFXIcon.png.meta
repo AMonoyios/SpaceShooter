@@ -1,13 +1,7 @@
 fileFormatVersion: 2
-guid: d08b19ef51b29664aabcd23d2f2502f5
+guid: 4d4f18fba1be7614e9f1c51c8a1bab18
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 7851470227991654557
-    second: Spaceship
-  - first:
-      213: 5680876330281301099
-    second: Bullet
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -43,21 +37,21 @@ TextureImporter:
     mipBias: -100
     wrapU: 1
     wrapV: 1
-    wrapW: 0
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: 0
+  spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -71,11 +65,11 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 256
+    maxTextureSize: 32
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 3
-    compressionQuality: 20
+    compressionQuality: 30
     crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
@@ -83,11 +77,11 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 256
+    maxTextureSize: 32
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 3
-    compressionQuality: 20
+    compressionQuality: 30
     crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
@@ -107,11 +101,11 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
-    maxTextureSize: 256
+    maxTextureSize: 32
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 3
-    compressionQuality: 20
+    compressionQuality: 30
     crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
@@ -119,11 +113,11 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Windows Store Apps
-    maxTextureSize: 256
+    maxTextureSize: 64
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 3
-    compressionQuality: 20
+    compressionQuality: 30
     crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
@@ -131,49 +125,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: Spaceship
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 12
-        width: 316
-        height: 470
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d907fffc29606fc60800000000000000
-      internalID: 7851470227991654557
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Bullet
-      rect:
-        serializedVersion: 2
-        x: 434
-        y: 380
-        width: 50
-        height: 98
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b64775f7ce686de40800000000000000
-      internalID: 5680876330281301099
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []

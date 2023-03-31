@@ -170,13 +170,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 9309773}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4c615fda9250c64fb6c685c717d415a, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c3139882b50e3844a7279b440600e09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sfxBtn: {fileID: 850356500}
   sfxImg: {fileID: 850356501}
   sfxOnImg: {fileID: 21300000, guid: 446823fabe1daa9488e8839b3811ad68, type: 3}
   sfxOffImg: {fileID: 21300000, guid: 4d4f18fba1be7614e9f1c51c8a1bab18, type: 3}
+  player: {fileID: 941234418}
+  playerHealthText: {fileID: 32358978}
 --- !u!1 &32358977
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,7 +678,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 5811866227059200450, guid: dbbd26e695b8b3f4eb42d34f5f0dfb1a, type: 3}
-  playerHealthText: {fileID: 32358978}
 --- !u!50 &941234419
 Rigidbody2D:
   serializedVersion: 4

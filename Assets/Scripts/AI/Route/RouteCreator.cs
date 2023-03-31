@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+///     Class responsible for all movement in game. You can create spines that AI can navigate on to.
+/// </summary>
 public sealed class RouteCreator : MonoBehaviour
 {
     [System.Serializable]

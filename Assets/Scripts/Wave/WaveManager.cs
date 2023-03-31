@@ -4,12 +4,18 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 
+/// <summary>
+///     Enum state that handles the wave state
+/// </summary>
 public enum GameState
 {
     Idle,
     Playing
 }
 
+/// <summary>
+///     Manager that handles all logic for waves and levels
+/// </summary>
 public sealed class WaveManager : MonoSingleton<WaveManager>
 {
     public GameState gameState = GameState.Idle;
@@ -28,10 +34,12 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
 
     private void Awake()
     {
+        // Loading player data upon loading the wave manager
         DataManager.Instance.LoadData();
 
         currentWaveIndex = 0;
 
+        // Starting initial wave
         StartCoroutine
         (
             CountdownTimer(levelsData.levels[DataManager.Instance.currentLevel].waves[currentWaveIndex].spawnTimer,
@@ -39,6 +47,11 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
         );
     }
 
+    /// <summary>
+    ///     Function that spawns all enemies of a specific level/wave
+    /// </summary>
+    /// <param name="levelIndex">The desired level of the wave</param>
+    /// <param name="waveIndex">The desired wave index</param>
     private void SpawnWave(int levelIndex, int waveIndex)
     {
         for (int enemyIndex = 0; enemyIndex < levelsData.levels[levelIndex].waves[waveIndex].enemies.Length; enemyIndex++)
@@ -52,6 +65,10 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
         HideUIText();
     }
 
+    /// <summary>
+    ///     Despawns specific enemy
+    /// </summary>
+    /// <param name="enemy">Enemy type reference</param>
     public void DespawnEnemy(Enemy enemy)
     {
         if (enemies.Remove(enemy))
@@ -68,6 +85,9 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
         }
     }
 
+    /// <summary>
+    ///     Function the will check if current wave is completed and then proceed to next wave if exist
+    /// </summary>
     private void TryProceedToNextWave()
     {
         Debug.Log("Try Proceed to next wave...");
@@ -110,69 +130,10 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
         }
     }
 
-    // public void DespawnEnemy(Enemy enemy)
-    // {
-    //     if(enemies.Remove(enemy))
-    //     {
-    //         Debug.Log($"Removed {enemy.name} from enemies");
-    //     }
-
-    //     Destroy(enemy.gameObject);
-    // }
-
-    // public void DespawnWave(int levelIndex, int waveIndex)
-    // {
-    //     Debug.Log($"Despawning wave => Level: {levelIndex}, Wave: {waveIndex}");
-    //     foreach (Enemy enemy in enemies)
-    //     {
-    //         DespawnEnemy(enemy);
-    //     }
-    //     enemies.Clear();
-    //     Debug.Log($"Enemies count: {enemies.Count}");
-    // }
-
-    // public void CompleteWave(string waveCompletedText = "Wave Completed!")
-    // {
-    //     guiText.gameObject.SetActive(true);
-    //     guiText.text = waveCompletedText;
-    // }
-
-    // public void TryProceedToNextWave()
-    // {
-    //     Debug.Log("Try Proceed to next wave");
-
-    //     if (IsWaveCompleted)
-    //     {
-    //         Debug.Log("Proceed to next");
-    //         DespawnWave(DataManager.Instance.currentLevel, currentWaveIndex);
-    //         CompleteWave("Level cleared!");
-
-    //         if (levelsData.levels[DataManager.Instance.currentLevel].waves.Count > currentWaveIndex + 1)
-    //         {
-    //             currentWaveIndex++;
-    //             Debug.Log($"Entering wave {currentWaveIndex}...");
-
-    //             StartCoroutine
-    //             (
-    //                 CountdownTimer
-    //                 (
-    //                     levelsData.levels[DataManager.Instance.currentLevel].waves[currentWaveIndex].spawnTimer,
-    //                     () => SpawnWave(DataManager.Instance.currentLevel, currentWaveIndex)
-    //                 )
-    //             );
-    //         }
-    //         else
-    //         {
-    //             Debug.Log("Level cleared!");
-
-    //             StartCoroutine(GoToMenu());
-    //         }
-
-    //         DataManager.Instance.SaveData();
-    //     }
-    // }
-
-    public bool IsWaveCompleted
+    /// <summary>
+    ///     Returns true if current wave active is completed
+    /// </summary>
+    private bool IsWaveCompleted
     {
         get
         {
@@ -201,6 +162,12 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
         guiText.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    ///     Countdown coroutine
+    /// </summary>
+    /// <param name="duration">The desired time that you want to count down to</param>
+    /// <param name="onComplete">An action that you want to perform after countdown is completed</param>
+    /// <returns></returns>
     private IEnumerator CountdownTimer(float duration, System.Action onComplete = null)
     {
         while (duration > 0.0f)
@@ -214,6 +181,9 @@ public sealed class WaveManager : MonoSingleton<WaveManager>
         onComplete?.Invoke();
     }
 
+    /// <summary>
+    ///     Coroutine that loads the Main Menu scene
+    /// </summary>
     public IEnumerator GoToMenu()
     {
         yield return new WaitForSeconds(exitLevelTimer);

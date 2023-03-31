@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+///     Scriptable object that holds all data for player. This can also be used for enemy but enemy script will need refactoring
+/// </summary>
 [CreateAssetMenu(menuName = "Assets/Stats", fileName = "Stats")]
 public class DataScriptableObject : ScriptableObject
 {

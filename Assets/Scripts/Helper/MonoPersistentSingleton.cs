@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class MonoPersistentSingleton<T> : MonoSingleton<T> where T : Component

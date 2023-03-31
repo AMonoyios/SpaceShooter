@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
+/// <summary>
+///     Levels panel
+/// </summary>
 public sealed class UILevelsPanel : UIBasePanel
 {
     [Header("Levels Panel Properties")]
@@ -17,8 +17,12 @@ public sealed class UILevelsPanel : UIBasePanel
     [SerializeField]
     private Button backBtn;
 
+    /// <summary>
+    ///     Resets the panels visible.
+    /// </summary>
     private void Start()
     {
+        // FIXME: find a better way to handle duplicate level buttons
         for (int i = 0; i < contentTransform.childCount; i++)
         {
             Debug.Log("Deleting levels child");

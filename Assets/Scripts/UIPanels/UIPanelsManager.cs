@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
+/// <summary>
+///     Manager that handles all logic for panels
+/// </summary>
 public sealed class UIPanelsManager : MonoSingleton<UIPanelsManager>
 {
     [Header("Panels")]
@@ -15,6 +15,7 @@ public sealed class UIPanelsManager : MonoSingleton<UIPanelsManager>
         DataManager.Instance.LoadData();
     }
 
+    // Resets the player prefs, this is only for testing purposes
     #if UNITY_EDITOR
     private void Update()
     {
@@ -26,6 +27,9 @@ public sealed class UIPanelsManager : MonoSingleton<UIPanelsManager>
     }
     #endif
 
+    /// <summary>
+    ///     Hides all panels. This is chained with desired panel's ShowPanel() method
+    /// </summary>
     public void HideAllPanels()
     {
         menuPanel.HidePanel();

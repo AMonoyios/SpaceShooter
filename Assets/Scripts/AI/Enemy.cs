@@ -3,21 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///     Base class for all enemies in game. It can be also used a s a basic enemy.
+/// </summary>
 [RequireComponent(typeof(RouteCreator))]
-public sealed class Enemy : MonoBehaviour, IDamagable
+public class Enemy : MonoBehaviour, IDamagable
 {
     private RouteCreator routeCreator;
     private readonly List<Tuple<Vector2, Vector2, Vector2, Vector2>> points = new List<Tuple<Vector2, Vector2, Vector2, Vector2>>();
-
     private int checkpointIndex = 0;
     private bool moving = false;
     private float elapsedTime = 0.0f;
 
-    [Header("Stats")]
+    [Header("Base Enemy Properties")]
     [SerializeField, Tooltip("How many scrap the enemy will drop after death"), Min(0)]
     private int scrap = 0;
     [SerializeField, Min(1)]
     private int health;
+    public int Health => health;
     public bool IsAlive
     {
         get
@@ -26,18 +29,8 @@ public sealed class Enemy : MonoBehaviour, IDamagable
             return health > 0;
         }
     }
-    [SerializeField, Min(50.0f)]
+    [SerializeField, Min(25.0f)]
     private float speed = 100.0f;
-    [SerializeField, Min(1)]
-    private int damage = 1;
-    [SerializeField, Min(0.5f)]
-    private float reloadTime = 1.5f;
-
-    [Header("Bullet")]
-    [SerializeField]
-    private GameObject bulletPrefab;
-    private float timer = 0.0f;
-    private const float bulletForce = 2.5f;
 
     private void Awake()
     {
@@ -58,15 +51,8 @@ public sealed class Enemy : MonoBehaviour, IDamagable
         transform.position = points[0].Item1;
     }
 
-    private void Update()
+    public virtual void Update()
     {
-        timer += Time.deltaTime;
-        if (timer >= reloadTime)
-        {
-            Shoot();
-            timer = 0.0f;
-        }
-
         if (moving)
         {
             return;
@@ -103,17 +89,6 @@ public sealed class Enemy : MonoBehaviour, IDamagable
         elapsedTime = 0.0f;
 
         moving = false;
-    }
-
-    private void Shoot()
-    {
-        SoundManager.Instance.PlaySound(SoundManager.SoundType.Shoot);
-
-        GameObject bulletGO = Instantiate(bulletPrefab, transform.position, transform.rotation);
-        Bullet bullet = bulletGO.GetComponent<Bullet>();
-        bullet.owner = gameObject;
-        bullet.damage = damage;
-        bullet.GetComponent<Rigidbody2D>().AddForce(reloadTime * bulletForce * transform.up, ForceMode2D.Impulse);
     }
 
     public void TakeDamage(int amount)
