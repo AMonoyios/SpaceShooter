@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
 
+/// <summary>
+///     Custom editor for Route creator
+/// </summary>
 [CustomEditor(typeof(RouteCreator))]
 public sealed class RouteEditor : Editor
 {

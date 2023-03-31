@@ -1,7 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///     Class that is responsible for all enviroment setup
+/// </summary>
 public sealed class EnviromentManager : MonoBehaviour
 {
     [SerializeField]

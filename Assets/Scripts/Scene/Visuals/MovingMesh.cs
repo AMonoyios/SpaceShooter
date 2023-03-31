@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+///     Class that moves the mesh's Y UV coordinates to simulate moving background
+/// </summary>
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshFilter))]
 public sealed class MovingMesh : MonoBehaviour
@@ -36,6 +39,7 @@ public sealed class MovingMesh : MonoBehaviour
             return;
         }
 
+        // this will not work with all shaders
         offset += Time.deltaTime * moveFactor / 100.0f;
         material.SetTextureOffset("_MainTex", new Vector2(0.0f, offset));
     }

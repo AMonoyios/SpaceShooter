@@ -48,6 +48,7 @@ MonoBehaviour:
   - waves:
     - enemies:
       - {fileID: 1284232563612203200, guid: 89fce1aac00f2134fa8eec8932706e21, type: 3}
+      - {fileID: 301178023962446042, guid: 2451995cb92bc6340bc24e27f9c684c8, type: 3}
       spawnTimer: 0
     - enemies:
       - {fileID: 1239728491422173633, guid: 65b20965543259f4eb08e7654026ca4d, type: 3}

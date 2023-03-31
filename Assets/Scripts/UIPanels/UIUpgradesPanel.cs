@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+///     Upgrades panel
+/// </summary>
 public sealed class UIUpgradesPanel : UIBasePanel
 {
     [Header("Upgrades Panel Properties")]
@@ -45,6 +46,11 @@ public sealed class UIUpgradesPanel : UIBasePanel
     [SerializeField]
     private Button backBtn;
 
+    private void Start()
+    {
+        EventsManager.Instance.OnUpdateUpgradesHUD += UpdatePlayerStats;
+    }
+
     public override void Awake()
     {
         base.Awake();
@@ -56,13 +62,10 @@ public sealed class UIUpgradesPanel : UIBasePanel
         upgradeHealthBtn.onClick.AddListener(UpgradeHealth);
 
         upgradeSpeedTxt.text = $"+{speedUpgradeValue} Speed for {upgradeCost} scrap";
-        upgradeReloadTxt.text = $"-{reloadTimeUpgradeValue} Speed for {upgradeCost} scrap";
-        upgradeHealthTxt.text = $"+{healthUpgradeValue} Speed for {upgradeCost} scrap";
-    }
+        upgradeReloadTxt.text = $"-{reloadTimeUpgradeValue} Reload time for {upgradeCost} scrap";
+        upgradeHealthTxt.text = $"+{healthUpgradeValue} Health for {upgradeCost} scrap";
 
-    private void OnEnable()
-    {
-        UpdateStatsDisplay();
+        UpdatePlayerStats();
     }
 
     private void ShowMenuPanel()
@@ -73,6 +76,9 @@ public sealed class UIUpgradesPanel : UIBasePanel
         UIPanelsManager.Instance.menuPanel.ShowPanel();
     }
 
+    /// <summary>
+    ///     Function that will upgrade speed and then save
+    /// </summary>
     private void UpgradeSpeed()
     {
         if (DataManager.Instance.playerData.scrap >= upgradeCost)
@@ -81,10 +87,15 @@ public sealed class UIUpgradesPanel : UIBasePanel
 
             DataManager.Instance.playerData.scrap -= upgradeCost;
             DataManager.Instance.playerData.speed += speedUpgradeValue;
-            UpdateStatsDisplay();
+
+            DataManager.Instance.SaveData();
+            EventsManager.Instance.UpdateUpgradesHUD();
         }
     }
 
+    /// <summary>
+    ///     Function that will upgrade reload times and then save
+    /// </summary>
     private void UpgradeReload()
     {
         if (DataManager.Instance.playerData.scrap >= upgradeCost)
@@ -93,10 +104,15 @@ public sealed class UIUpgradesPanel : UIBasePanel
 
             DataManager.Instance.playerData.scrap -= upgradeCost;
             DataManager.Instance.playerData.reloadTime -= reloadTimeUpgradeValue;
-            UpdateStatsDisplay();
+
+            DataManager.Instance.SaveData();
+            EventsManager.Instance.UpdateUpgradesHUD();
         }
     }
 
+    /// <summary>
+    ///     Function that will upgrade health and then save
+    /// </summary>
     private void UpgradeHealth()
     {
         if (DataManager.Instance.playerData.scrap >= upgradeCost)
@@ -105,14 +121,17 @@ public sealed class UIUpgradesPanel : UIBasePanel
 
             DataManager.Instance.playerData.scrap -= upgradeCost;
             DataManager.Instance.playerData.health += healthUpgradeValue;
-            UpdateStatsDisplay();
+
+            DataManager.Instance.SaveData();
+            EventsManager.Instance.UpdateUpgradesHUD();
         }
     }
 
-    private void UpdateStatsDisplay()
+    /// <summary>
+    ///     Function that updates the stats of the player, this will be called from the event manager every time a stat is upgraded
+    /// </summary>
+    private void UpdatePlayerStats()
     {
-        DataManager.Instance.SaveData();
-
         currentSpeedTxt.text = "Speed " + DataManager.Instance.playerData.speed.ToString();
         currentReloadTxt.text = "Reload " + DataManager.Instance.playerData.reloadTime.ToString();
         currentHealthTxt.text = "Health " + DataManager.Instance.playerData.health.ToString();

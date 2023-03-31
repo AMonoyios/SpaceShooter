@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fce1853fd25f8684eac5af5e9e2e55cd
+guid: d08b19ef51b29664aabcd23d2f2502f5
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -71,11 +71,11 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 256
+    maxTextureSize: 128
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 3
-    compressionQuality: 20
+    compressionQuality: 30
     crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
@@ -83,11 +83,11 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 256
+    maxTextureSize: 128
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 3
-    compressionQuality: 20
+    compressionQuality: 30
     crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0
@@ -107,11 +107,11 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
-    maxTextureSize: 256
+    maxTextureSize: 128
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 3
-    compressionQuality: 20
+    compressionQuality: 30
     crunchedCompression: 1
     allowsAlphaSplitting: 0
     overridden: 0

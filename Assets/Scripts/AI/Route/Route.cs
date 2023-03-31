@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
+/// <summary>
+///     Class responsible for Route logic
+/// </summary>
+[Serializable]
 public class Route
 {
     [SerializeField, HideInInspector]
@@ -85,7 +88,7 @@ public class Route
     public void AddSegment(Vector2 anchorPos)
     {
         checkpoints.Add((checkpoints[checkpoints.Count - 1] * 2) - checkpoints[checkpoints.Count - 2]);
-        checkpoints.Add((checkpoints[checkpoints.Count - 1] + anchorPos) * .5f);
+        checkpoints.Add((checkpoints[checkpoints.Count - 1] + anchorPos) * 0.5f);
         checkpoints.Add(anchorPos);
 
         if (autoSetControlPoints)

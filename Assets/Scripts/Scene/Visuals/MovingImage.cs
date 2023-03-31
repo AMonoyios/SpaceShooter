@@ -1,8 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+///     Class that moves the image's Y UV coordinates to simulate moving background
+/// </summary>
 [RequireComponent(typeof(Image))]
 public sealed class MovingImage : MonoBehaviour
 {

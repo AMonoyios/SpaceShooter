@@ -1,8 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+///     This is used as a base for all panels. It can also be used a standalone panel.
+/// </summary>
 public class UIBasePanel : MonoBehaviour
 {
     [Header("Base Panel properties")]
@@ -15,6 +16,9 @@ public class UIBasePanel : MonoBehaviour
     [SerializeField]
     private Sprite sfxOffImg;
 
+    /// <summary>
+    ///     Closes the panel if not already closed
+    /// </summary>
     public virtual void HidePanel()
     {
         if (!gameObject.activeSelf)
@@ -25,6 +29,9 @@ public class UIBasePanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    /// <summary>
+    ///     Opens the panel if not already open
+    /// </summary>
     public virtual void ShowPanel()
     {
         if (gameObject.activeSelf)
@@ -42,12 +49,23 @@ public class UIBasePanel : MonoBehaviour
         UpdateSFXIcon();
     }
 
+    /// <summary>
+    ///     Logic that controls the toggle of music
+    /// </summary>
     public void ToggleSFX()
     {
-        SoundManager.Instance.PlaySound(SoundManager.SoundType.Click);
-
         DataManager.Instance.playerData.isAudioOn = !DataManager.Instance.playerData.isAudioOn;
         DataManager.Instance.SaveData();
+
+        if (DataManager.Instance.playerData.isAudioOn)
+        {
+            SoundManager.Instance.PlaySound(SoundManager.SoundType.Click);
+            SoundManager.Instance.PlaySound(SoundManager.SoundType.Music, isLooping: true);
+        }
+        else
+        {
+            SoundManager.Instance.StopAll();
+        }
 
         UpdateSFXIcon();
     }

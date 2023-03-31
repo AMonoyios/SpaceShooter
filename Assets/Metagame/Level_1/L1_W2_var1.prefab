@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1239728491422173659}
   - component: {fileID: 1239728491422173662}
   - component: {fileID: 1239728491422173663}
-  - component: {fileID: 1239728491422173632}
+  - component: {fileID: 4272058625819404353}
   m_Layer: 0
   m_Name: L1_W2_var1
   m_TagString: Enemy
@@ -27,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1239728491422173633}
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!60 &1239728491422173659
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -109,7 +109,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d08b19ef51b29664aabcd23d2f2502f5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3e3162d8c611fd248801cbc27dbd3f17, type: 3}
   m_Color: {r: 1, g: 0.71225435, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   anchorDiameter: 0.1
   controlDiameter: 0.075
   collisionDistance: 0.25
---- !u!114 &1239728491422173632
+--- !u!114 &4272058625819404353
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,12 +162,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1239728491422173633}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcd59703ca1c7a8419614fae389ef6e1, type: 3}
+  m_Script: {fileID: 11500000, guid: c436c6ca095427446ae225256cb96fc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   scrap: 1
   health: 3
   speed: 75
-  damage: 1
-  reloadTime: 1.5
+  enemyHealthBar: {fileID: 0}
   bulletPrefab: {fileID: 5811866227059200450, guid: 1b6f7c57ffd3b17429a73d869c785ae1, type: 3}
+  damage: 1
+  reloadTime: 1.3

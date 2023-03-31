@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
+/// <summary>
+///     Class that hold all methods of the player
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public sealed class PlayerController : MonoBehaviour, IDamagable
 {
@@ -14,9 +14,8 @@ public sealed class PlayerController : MonoBehaviour, IDamagable
     private GameObject bulletPrefab;
     private const float bulletForce = 5.0f;
 
-    [SerializeField]
-    private TextMeshProUGUI playerHealthText;
     private int health;
+    public int Health => health;
     private int damage;
 
     private float timer = 0.0f;
@@ -33,11 +32,12 @@ public sealed class PlayerController : MonoBehaviour, IDamagable
         health = DataManager.Instance.playerData.health;
         damage = DataManager.Instance.playerData.damage;
 
-        UpdatePlayerHealthDisplay();
+        EventsManager.Instance.UpdateMetagameHUD();
     }
 
     private void Update()
     {
+        // handle player touch input
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -63,6 +63,9 @@ public sealed class PlayerController : MonoBehaviour, IDamagable
         }
     }
 
+    /// <summary>
+    ///     Method that holds logic for shooting, collision is handles separately
+    /// </summary>
     private void Shoot()
     {
         SoundManager.Instance.PlaySound(SoundManager.SoundType.Shoot);
@@ -74,6 +77,10 @@ public sealed class PlayerController : MonoBehaviour, IDamagable
         bulletGO.GetComponent<Rigidbody2D>().AddForce(transform.up * bulletForce, ForceMode2D.Impulse);
     }
 
+    /// <summary>
+    ///     Method that hold logic for taking any type of damage
+    /// </summary>
+    /// <param name="amount">amount of damage player will take</param>
     public void TakeDamage(int amount)
     {
         health -= amount;
@@ -85,11 +92,6 @@ public sealed class PlayerController : MonoBehaviour, IDamagable
             StartCoroutine(WaveManager.Instance.GoToMenu());
         }
 
-        UpdatePlayerHealthDisplay();
-    }
-
-    private void UpdatePlayerHealthDisplay()
-    {
-        playerHealthText.text = "Health: " + health.ToString();
+        EventsManager.Instance.UpdateMetagameHUD();
     }
 }
