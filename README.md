@@ -2,6 +2,11 @@
 
 ## Change logs
 
+### 0.1.11
+- Refactoring enemy class
+- Implemented overwritable enemies
+- Optimizations and bug fixes
+
 ### 0.0.10
 - Refactor wave manager
 - Refactor panels
